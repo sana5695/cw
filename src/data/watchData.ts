@@ -1,3 +1,5 @@
+import { getAppPath } from '../utils/url';
+
 export interface WatchCase {
   name: string;
   image: string;
@@ -27,23 +29,28 @@ export interface WatchData {
   straps: WatchPart[];
 }
 
+// Функция для добавления базового пути к изображениям
+function getImagePath(path: string): string {
+  return getAppPath(path);
+}
+
 const watchData: WatchData = {
   "cases": [
     {
       "name": "Nautilus",
-      "image": "/images/cases/c1.png",
+      "image": getImagePath("/images/cases/c1.png"),
       "colors": [
         {
             "name": "Серебряный",
-            "image": "/images/cases/c1/c1s.png"
+            "image": getImagePath("/images/cases/c1/c1s.png")
           },
         {
           "name": "Золотой",
-          "image": "/images/cases/c1/c1g.png"
+          "image": getImagePath("/images/cases/c1/c1g.png")
         },
         {
           "name": "Розовый",
-          "image": "/images/cases/c1/c1p.png"
+          "image": getImagePath("/images/cases/c1/c1p.png")
         }
       ],
       "availableParts": {
@@ -57,122 +64,122 @@ const watchData: WatchData = {
   "dials": [
     {
       "name": "d1",
-      "image": "/images/dials/d1.png",
+      "image": getImagePath("/images/dials/d1.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d2",
-      "image": "/images/dials/d2.png",
+      "image": getImagePath("/images/dials/d2.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d3",
-      "image": "/images/dials/d3.png",
+      "image": getImagePath("/images/dials/d3.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d4",
-      "image": "/images/dials/d4.png",
+      "image": getImagePath("/images/dials/d4.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d5",
-      "image": "/images/dials/d5.png",
+      "image": getImagePath("/images/dials/d5.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d6",
-      "image": "/images/dials/d6.png",
+      "image": getImagePath("/images/dials/d6.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d7",
-      "image": "/images/dials/d7.png",
+      "image": getImagePath("/images/dials/d7.png"),
       "compatibleCases": ["Nautilus"]
     },  
     {
       "name": "d8",
-      "image": "/images/dials/d8.png",
+      "image": getImagePath("/images/dials/d8.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d9",
-      "image": "/images/dials/d9.png",
+      "image": getImagePath("/images/dials/d9.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d10",
-      "image": "/images/dials/d10.png",
+      "image": getImagePath("/images/dials/d10.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d11",
-      "image": "/images/dials/d11.png",
+      "image": getImagePath("/images/dials/d11.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d12",
-      "image": "/images/dials/d12.png",
+      "image": getImagePath("/images/dials/d12.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d13",
-      "image": "/images/dials/d13.png",
+      "image": getImagePath("/images/dials/d13.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d14",
-      "image": "/images/dials/d14.png",
+      "image": getImagePath("/images/dials/d14.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d15",
-      "image": "/images/dials/d15.png",
+      "image": getImagePath("/images/dials/d15.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d16",
-      "image": "/images/dials/d16.png",
+      "image": getImagePath("/images/dials/d16.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d17",
-      "image": "/images/dials/d17.png",
+      "image": getImagePath("/images/dials/d17.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d18",
-      "image": "/images/dials/d18.png",
+      "image": getImagePath("/images/dials/d18.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d19",
-      "image": "/images/dials/d19.png",
+      "image": getImagePath("/images/dials/d19.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d20",
-      "image": "/images/dials/d20.png",
+      "image": getImagePath("/images/dials/d20.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d21",
-      "image": "/images/dials/d21.png",
+      "image": getImagePath("/images/dials/d21.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d22",
-      "image": "/images/dials/d22.png",
+      "image": getImagePath("/images/dials/d22.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d23",
-      "image": "/images/dials/d23.png",
+      "image": getImagePath("/images/dials/d23.png"),
       "compatibleCases": ["Nautilus"]
     },
     {
       "name": "d24",
-      "image": "/images/dials/d24.png",
+      "image": getImagePath("/images/dials/d24.png"),
       "compatibleCases": ["Nautilus"]
     }
       
@@ -188,7 +195,7 @@ const watchData: WatchData = {
   "straps": [
     {
       "name": "Кожаный ремешок",
-      "image": "/images/straps/leather.png",
+      "image": getImagePath("/images/straps/leather.png"),
       "compatibleCases": ["Спортивный корпус"]
     },
   ]

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { WatchCase, WatchPart } from '../data/watchData';
+import { getAppPath } from '../utils/url';
 
 // Компонент для отображения превью часов 
 function WatchPreview({ 
@@ -343,7 +344,7 @@ export default function CustomizeClient({
     <div className="min-h-screen h-screen flex flex-col overflow-hidden bg-gradient-to-b from-[var(--color-bg-primary)] to-[var(--color-bg-secondary)]">
       <header className="bg-[var(--color-bg-secondary)]/80 py-3 px-6 shadow-md">
         <div className="flex justify-between items-center">
-          <Link href="/" className="text-[var(--color-text-primary)] hover:opacity-80 transition-opacity flex items-center">
+          <Link href={getAppPath('/')} className="text-[var(--color-text-primary)] hover:opacity-80 transition-opacity flex items-center">
             <span className="text-xl">&larr;</span><span className="ml-2 font-medium">Назад</span>
           </Link>
           <h1 className="text-xl font-bold  text-[var(--color-text-primary)]">

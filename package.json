@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "ESLINT_NO_DEV_ERRORS=true next build --no-lint",
+    "build:o": "ESLINT_NO_DEV_ERRORS=true next build --no-lint",
+    "build": "ESLINT_NO_DEV_ERRORS=true NODE_ENV=production next build --no-lint && echo 'Сборка для продакшена завершена!'",
+    "export": "ESLINT_NO_DEV_ERRORS=true NODE_ENV=production next build --no-lint && next export -o out",
     "start": "next start",
     "lint": "next lint"
   },
