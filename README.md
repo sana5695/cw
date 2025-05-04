@@ -1,36 +1,123 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Конфигуратор Часов
 
-## Getting Started
+Приложение для настройки и конфигурации часов с возможностью выбора различных компонентов: корпусов, циферблатов, стрелок, роторов и ремешков.
 
-First, run the development server:
+## Особенности
+
+- Выбор корпуса часов из каталога
+- Настройка цвета корпуса
+- Настройка циферблата, стрелок, ротора и ремешка
+- Предварительный просмотр в реальном времени
+- Удобная система управления данными
+- Поддержка совместимости компонентов с определенными корпусами
+- Скрытие недоступных категорий деталей
+- Административная панель для управления всеми компонентами
+
+## Запуск приложения
 
 ```bash
+# Установка зависимостей
+npm install
+
+# Запуск в режиме разработки
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Сборка для продакшн
+npm run build
+
+# Запуск продакшн версии
+npm run start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Структура данных
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Все данные хранятся в файле `src/data/watchData.ts`. Структура данных:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **cases**: Корпуса часов
+  - Каждый корпус имеет набор доступных цветов
+  - Каждый корпус определяет, какие категории деталей для него доступны (`availableParts`)
+- **dials**: Циферблаты
+  - Каждый циферблат может быть совместим со всеми или некоторыми корпусами (`compatibleCases`)
+- **hands**: Стрелки
+  - Каждая стрелка может быть совместима со всеми или некоторыми корпусами (`compatibleCases`)
+- **rotors**: Роторы
+  - Каждый ротор может быть совместим со всеми или некоторыми корпусами (`compatibleCases`)
+- **straps**: Ремешки
+  - Каждый ремешок может быть совместим со всеми или некоторыми корпусами (`compatibleCases`)
 
-## Learn More
+### Настройка совместимости
 
-To learn more about Next.js, take a look at the following resources:
+- Если массив `compatibleCases` пустой, деталь совместима со всеми корпусами
+- Если в массиве `compatibleCases` перечислены ID корпусов, деталь совместима только с этими корпусами
+- Если у корпуса параметр доступности детали (например `hasRotors`) установлен в `false`, эта категория деталей не будет отображаться
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Администрирование
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Приложение включает административную панель для управления всеми данными:
 
-## Deploy on Vercel
+1. Перейдите на страницу `/admin` для доступа к панели администратора
+2. Вы можете добавлять, редактировать и удалять:
+   - Корпуса часов (с настройкой доступных категорий)
+   - Циферблаты
+   - Стрелки
+   - Роторы
+   - Ремешки
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Добавление новых компонентов через админ-панель
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Выберите соответствующую вкладку (Корпуса, Циферблаты и т.д.)
+2. Нажмите кнопку "Добавить новый..."
+3. Заполните форму:
+   - ID: уникальный идентификатор (используется в URL и именах файлов)
+   - Название: отображаемое имя компонента
+   - Изображение: путь к изображению (можно загрузить новое)
+   - Для корпусов: настройте доступные цвета и категории деталей
+   - Для деталей: укажите совместимость с корпусами
+4. Нажмите "Сохранить"
+
+### Загрузка изображений
+
+При добавлении или редактировании компонентов вы можете загружать изображения:
+1. Кликните на кнопку "Загрузить" рядом с полем изображения
+2. Выберите PNG-файл с прозрачным фоном
+3. Изображение будет автоматически сохранено в соответствующей папке
+
+## Добавление новых компонентов вручную
+
+Если вы предпочитаете добавлять компоненты вручную:
+
+1. Добавьте изображения в соответствующие папки:
+   - `/public/images/cases/` - для корпусов
+   - `/public/images/dials/` - для циферблатов
+   - `/public/images/hands/` - для стрелок
+   - `/public/images/rotors/` - для роторов
+   - `/public/images/straps/` - для ремешков
+
+2. Обновите файл данных `src/data/watchData.ts`, добавив информацию о новых компонентах.
+
+3. Для корпусов важно указать:
+   - Доступные цвета
+   - Какие типы деталей доступны (в объекте `availableParts`)
+
+4. Для деталей (циферблатов, стрелок и т.д.) важно указать:
+   - С какими корпусами они совместимы (в массиве `compatibleCases`)
+
+## Страницы приложения
+
+- **/** - Главная страница с выбором корпуса
+- **/customize/[caseId]** - Страница настройки выбранного корпуса
+- **/admin** - Административная панель для управления данными
+
+## Советы по изображениям
+
+- Все изображения должны быть в формате PNG с прозрачным фоном
+- Для лучшего отображения рекомендуется использовать одинаковый размер для всех изображений
+- Имена файлов должны совпадать с ID компонентов в данных
+- Для наложения слоев все изображения должны быть отцентрированы одинаково
+
+## Технологии
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
