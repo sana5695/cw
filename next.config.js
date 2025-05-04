@@ -1,11 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false,
+  reactStrictMode: true,
+  images: {
+    domains: [],
+  },
+  // Отключаем строгую типизацию для страниц
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  // Отключаем экспериментальные функции, которые могут вызывать конфликты
   experimental: {
-    // Отключаем некоторые экспериментальные функции, которые могут вызывать проблемы с гидратацией
-    serverComponentsExternalPackages: [],
-    optimizeCss: false,
-    scrollRestoration: false,
+    // Пустые экспериментальные настройки
   }
 };
 

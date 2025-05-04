@@ -4,9 +4,13 @@ import watchData from '../../../data/watchData';
 import CustomizeClient from '@/components/CustomizeClient';
 
 // Серверный компонент страницы
-export default async function CustomizePage({ params }: { params: { caseid: string } }) {
+export default async function CustomizePage({ 
+  params 
+}: { 
+  params: { caseId: string } 
+}) {
   // Декодируем и находим выбранный корпус
-  const decodedCaseId = decodeURIComponent(params.caseid);
+  const decodedCaseId = decodeURIComponent(params.caseId);
   const foundCase = watchData.cases.find(c => c.name === decodedCaseId);
   
   // Если корпус не найден, показываем 404
@@ -43,4 +47,4 @@ export default async function CustomizePage({ params }: { params: { caseid: stri
       />
     </Suspense>
   );
-}
+} 
