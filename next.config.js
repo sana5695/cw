@@ -9,6 +9,8 @@ const nextConfig = {
   output: process.env.NODE_ENV === 'production' ? 'export' : undefined,
   // Отключаем вывод ссылки на Next.js в HTML
   poweredByHeader: false,
+  // Отключаем проверку версии Node.js
+  skipNodeCheck: true,
   images: {
     domains: [],
     // Разрешаем неоптимизированные изображения для статического экспорта
