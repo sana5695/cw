@@ -1,11 +1,8 @@
-@import "tailwindcss";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-
-
   --primary: #5D5C61;
   --secondary: #350f7f;
   --accent: #7395AE;
