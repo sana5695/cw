@@ -1,14 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
-    ignoreDuringBuilds: true,
+    // Отключаем проверку ESLint при сборке
+    ignoreDuringBuilds: true
   },
   images: {
     domains: ['localhost'],
   },
   // Отключаем экспериментальные функции, которые могут вызывать ошибки
   experimental: {
-    serverActions: false,
+    // Никаких экспериментальных опций
   }
 };
 
