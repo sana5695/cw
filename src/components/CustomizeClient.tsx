@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { WatchCase, WatchPart } from '../data/watchData';
 
@@ -119,12 +119,10 @@ function ColorSelector({
 
 // Компонент для выбора частей часов
 function PartSelector({ 
-  title, 
   parts, 
   selectedPart, 
   onSelectPart 
 }: { 
-  title: string; 
   parts: WatchPart[]; 
   selectedPart: string; 
   onSelectPart: (name: string) => void;
@@ -284,7 +282,6 @@ export default function CustomizeClient({
         return (
           <div className="h-full flex flex-col">
             <PartSelector
-              title="Циферблат"
               parts={compatibleDials}
               selectedPart={selectedDial}
               onSelectPart={setSelectedDial}
@@ -295,7 +292,6 @@ export default function CustomizeClient({
         return (
           <div className="h-full flex flex-col">
             <PartSelector
-              title="Стрелки"
               parts={compatibleHands}
               selectedPart={selectedHands}
               onSelectPart={setSelectedHands}
@@ -306,7 +302,6 @@ export default function CustomizeClient({
         return (
           <div className="h-full flex flex-col">
             <PartSelector
-              title="Ротор"
               parts={compatibleRotors}
               selectedPart={selectedRotor}
               onSelectPart={setSelectedRotor}
@@ -317,7 +312,6 @@ export default function CustomizeClient({
         return (
           <div className="h-full flex flex-col">
             <PartSelector
-              title="Ремешок"
               parts={compatibleStraps}
               selectedPart={selectedStrap}
               onSelectPart={setSelectedStrap}

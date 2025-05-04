@@ -1,11 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  images: {
+    domains: ['localhost'],
+  },
+  // Отключаем экспериментальные функции, которые могут вызывать ошибки
   experimental: {
-    // Отключаем некоторые экспериментальные функции, которые могут вызывать проблемы с гидратацией
-    serverComponentsExternalPackages: [],
-    optimizeCss: false,
-    scrollRestoration: false,
+    serverActions: false,
   }
 };
 

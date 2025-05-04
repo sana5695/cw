@@ -1,10 +1,7 @@
 "use client";
 
-import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import watchData from '../data/watchData';
-import styles from './page.module.css';
 
 export default function Home() {
   return (
