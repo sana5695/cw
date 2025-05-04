@@ -1,6 +1,7 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image';
 import watchData from '../data/watchData';
 
 export default function Home() {
@@ -17,10 +18,13 @@ export default function Home() {
           >
             <div className="flex flex-col items-center">
               <div className="relative w-full h-64 mb-4 overflow-hidden rounded-lg">
-                <img
+                <Image
                   src={watchCase.image}
                   alt={watchCase.name}
-                  className="absolute inset-0 w-full h-full object-contain scale-125"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority={watchCase.name === 'Nautilus'}
+                  className="object-contain scale-125"
                 />
               </div>
               <h2 className="text-xl font-semibold">{watchCase.name}</h2>

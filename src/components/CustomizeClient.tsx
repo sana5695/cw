@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { WatchCase, WatchPart } from '../data/watchData';
 
@@ -29,46 +30,57 @@ function WatchPreview({
       
       <div className="relative w-full h-[calc(100%-2rem)] flex-grow">
         {selectedCaseColor && (
-          <img
+          <Image
             src={selectedCaseColor.image}
             alt={selectedCase.name}
-            className="absolute inset-0 w-full h-full object-contain drop-shadow-2xl"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority
+            className="object-contain drop-shadow-2xl"
             style={{ zIndex: 10 }}
           />
         )}
         
         {currentDial && (
-          <img
+          <Image
             src={currentDial.image}
             alt={currentDial.name}
-            className="absolute inset-0 w-full h-full object-contain drop-shadow-lg"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-contain drop-shadow-lg"
             style={{ zIndex: 1 }}
           />
         )}
         
         {currentHands && (
-          <img
+          <Image
             src={currentHands.image}
             alt={currentHands.name}
-            className="absolute inset-0 w-full h-full object-contain drop-shadow-md"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-contain drop-shadow-md"
             style={{ zIndex: 30 }}
           />
         )}
         
         {currentRotor && (
-          <img
+          <Image
             src={currentRotor.image}
             alt={currentRotor.name}
-            className="absolute inset-0 w-full h-full object-contain drop-shadow-md"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-contain drop-shadow-md"
             style={{ zIndex: 40 }}
           />
         )}
         
         {currentStrap && (
-          <img
+          <Image
             src={currentStrap.image}
             alt={currentStrap.name}
-            className="absolute inset-0 w-full h-full object-contain drop-shadow-xl"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-contain drop-shadow-xl"
             style={{ zIndex: 50 }}
           />
         )}
@@ -89,7 +101,7 @@ function ColorSelector({
 }) {
   return (
     <div className="overflow-y-auto h-full custom-scrollbar">
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {selectedCase.colors.map((color) => (
           <button
             key={color.name}
@@ -101,10 +113,12 @@ function ColorSelector({
             }`}
           >
             <div className="relative w-full h-60 overflow-hidden rounded-lg">
-              <img
+              <Image
                 src={color.image}
                 alt={color.name}
-                className={`absolute inset-0 w-full h-full object-contain scale-125 ${
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className={`object-contain scale-125 ${
                   selectedColor === color.name ? 'contrast-125' : ''
                 }`}
               />
@@ -141,10 +155,12 @@ function PartSelector({
             }`}
           >
             <div className="relative w-full h-30 overflow-hidden rounded-lg">
-              <img
+              <Image
                 src={part.image}
                 alt={part.name}
-                className={`absolute inset-0 w-full h-full object-contain scale-200 ${
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className={`object-contain scale-200 ${
                   selectedPart === part.name ? 'contrast-125' : ''
                 }`}
               />
