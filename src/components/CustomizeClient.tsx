@@ -126,7 +126,9 @@ function ColorSelector({
                 : 'hover:shadow-lg'
             }`}
           >
-            <div className="relative w-full h-40 overflow-hidden rounded-lg">
+            <div className="relative w-full h-40 overflow-hidden rounded-lg"
+            
+            >
               <Image
                 src={color.image}
                 alt={color.name}
@@ -167,7 +169,9 @@ function PartSelector({
                 : 'hover:shadow-lg'
             }`}
           >
-            <div className="relative size-32 overflow-hidden rounded-lg">
+            <div className={`relative size-32 overflow-hidden rounded-lg ${part.name[0] === 's' ? 'h-64' : ''}`}
+            
+            >
               <Image
                 src={part.image}
                 alt={part.name}
