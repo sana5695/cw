@@ -168,8 +168,8 @@ export function CustomizeStepper({
       // Отображение состава заказа и формы
       return (
         <div className="h-full overflow-y-auto custom-scrollbar">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
-            <div className="order-2 md:order-1">
+          <div className="grid grid-cols-1 gap-6 p-4">
+            <div className="order-2">
               <OrderForm
                 selectedCase={selectedCase}
                 selectedColor={selectedColor}
@@ -183,7 +183,7 @@ export function CustomizeStepper({
               />
             </div>
             
-            <div className="order-1 md:order-2 rounded-lg bg-gray-50 p-6 shadow-inner">
+            <div className="order-1 rounded-lg bg-gray-50 p-6 shadow-inner">
               <h3 className="text-xl font-semibold text-[var(--color-bg-primary)] mb-4">Состав заказа</h3>
               
               {/* Превью часов в мобильном - компактная версия */}
@@ -202,56 +202,42 @@ export function CustomizeStepper({
               
               <div className="space-y-4">
                 <div className="flex justify-between border-b pb-2">
-                  <span className="font-medium text-black">Корпус {selectedCase.name}</span>
-                  <span className="text-black">{formatPrice(selectedCase.price || 20000)}</span>
+                  <span className="font-medium text-black">Корпус: {selectedCase.name}</span>
                 </div>
                 
                 {currentDial && (
                   <div className="flex justify-between border-b pb-2">
-                    <span className="text-black">Циферблат {currentDial.name}</span>
-                    <span className="text-black">{formatPrice(currentDial.price || 0)}</span>
+                    <span className="text-black">Циферблат: {currentDial.name}</span>
                   </div>
                 )}
                 
                 {currentHands && (
                   <div className="flex justify-between border-b pb-2">
-                    <span className="text-black">Стрелки {currentHands.name}</span>
-                    <span className="text-black">{formatPrice(currentHands.price || 0)}</span>
+                    <span className="text-black">Стрелки: {currentHands.name}</span>
                   </div>
                 )}
                 
                 {currentRotor && (
                   <div className="flex justify-between border-b pb-2">
-                    <span className="text-black">Ротор {currentRotor.name}</span>
-                    <span className="text-black">{formatPrice(currentRotor.price || 0)}</span>
+                    <span className="text-black">Ротор: {currentRotor.name}</span>
                   </div>
                 )}
                 
                 {currentStrap && (
                   <div className="flex justify-between border-b pb-2">
-                    <span className="text-black">Ремешок {currentStrap.name}</span>
-                    <span className="text-black">{formatPrice(currentStrap.price || 0)}</span>
+                    <span className="text-black">Ремешок: {currentStrap.name}</span>
                   </div>
                 )}
                 
                 {currentBezel && (
                   <div className="flex justify-between border-b pb-2">
-                    <span className="text-black">Безель {currentBezel.name}</span>
-                    <span className="text-black">{formatPrice(currentBezel.price || 0)}</span>
+                    <span className="text-black">Безель: {currentBezel.name}</span>
                   </div>
                 )}
                 
                 <div className="flex justify-between pt-4 font-bold text-lg">
-                  <span className="text-black">Итого:</span>
-                  <span className="text-[var(--color-accent)]">{formatPrice(calculateTotal())}</span>
+                  <span className="text-[var(--color-accent)] text-4xl">{formatPrice(calculateTotal())}</span>
                 </div>
-              </div>
-              
-              <div className="mt-6 p-4 bg-white rounded-lg border border-gray-200">
-                <h4 className="font-medium mb-2">Выбранный цвет: {selectedColor}</h4>
-                <p className="text-sm text-gray-600">
-                  Финальная стоимость может быть скорректирована после согласования всех деталей с менеджером.
-                </p>
               </div>
             </div>
           </div>

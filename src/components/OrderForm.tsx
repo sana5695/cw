@@ -95,7 +95,7 @@ export function OrderForm({
   
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
-      <h3 className="text-xl font-semibold text-[var(--color-bg-primary)]">Завершение заказа</h3>
+      <h3 className="text-xl font-semibold text-black">Завершение заказа</h3>
       
       <div className="space-y-2">
         <label className="block text-sm font-medium text-[var(--color-bg-primary)]">
@@ -107,7 +107,7 @@ export function OrderForm({
           onChange={handlePhoneChange}
           onBlur={() => validatePhone(phone)}
           placeholder="+7 (XXX) XXX-XX-XX"
-          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[var(--color-accent)] outline-none ${
+          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[var(--color-accent)] outline-none text-black ${
             phoneError ? 'border-red-500' : 'border-gray-300'
           }`}
           required
@@ -177,7 +177,7 @@ export function OrderForm({
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           placeholder="Дополнительная информация о заказе..."
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--color-accent)] outline-none min-h-[80px]"
+          className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--color-accent)] outline-none min-h-[80px]"
         />
       </div>
       
