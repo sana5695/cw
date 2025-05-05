@@ -10,30 +10,31 @@
   --background: #557A95;
   --foreground: #000000;
 
-  --color-bg-primary: #2e00e6;
-  --color-bg-secondary: #7395AE;
+  --color-bg-primary: #121212;
+  --color-bg-secondary: #1e1e1e;
   --color-bg-white: #5D5C61;
   --color-text-primary: #ffffff;
-  --color-text-secondary: #9ca3af;
-  --color-accent: #3b82f6;
-  --color-accent-hover: #2563eb;
+  --color-text-secondary: #e0e0e0;
+  --color-accent: #ff6b00;
+  --color-accent-hover: #ff9d57;
+  --color-accent-rgb: 255, 107, 0;
   --color-border: #e5e7eb;
   --color-border-accent: #93c5fd;
-  --color-disabled: #d1d5db;
+  --color-disabled: #4a4a4a;
 }
 
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
   font-family: Arial, Helvetica, sans-serif;
   overflow-x: hidden;
 }
 
-/* Улучшенный скроллбар */
+/* Стили для кастомного скроллбара */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(203, 213, 225, 0.5) rgba(255, 255, 255, 0.1);
+  scrollbar-color: rgba(var(--color-accent-rgb), 0.5) transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -41,18 +42,17 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  margin: 4px;
+  background: transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(203, 213, 225, 0.5);
-  border-radius: 10px;
+  background-color: rgba(var(--color-accent-rgb), 0.5);
+  border-radius: 20px;
+  border: 2px solid transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(203, 213, 225, 0.8);
+  background-color: rgba(var(--color-accent-rgb), 0.8);
 }
 
 /* Анимации */

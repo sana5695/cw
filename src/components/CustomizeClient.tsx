@@ -1,239 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { WatchCase, WatchPart } from '../data/watchData';
-
-// Компонент для отображения превью часов 
-function WatchPreview({ 
-  selectedCase, 
-  selectedColor, 
-  currentDial, 
-  currentHands, 
-  currentRotor, 
-  currentStrap,
-  currentBezel
-}: { 
-  selectedCase: WatchCase;
-  selectedColor: string;
-  currentDial: WatchPart | undefined;
-  currentHands: WatchPart | undefined;
-  currentRotor: WatchPart | undefined;
-  currentStrap: WatchPart | undefined;
-  currentBezel: WatchPart | undefined;
-}) {
-  // Находим выбранный цвет только один раз
-  const selectedCaseColor = selectedCase.colors.find(c => c.name === selectedColor);
-
-  return (
-    <div className="bg-gradient-to-br from-[var(--color-bg-primary)] to-[var(--color-bg-secondary)] rounded-lg flex flex-col items-center h-full shadow-2xl">
-
-      <div className="relative w-full h-[calc(100%-2rem)] flex-grow">
-        {selectedCaseColor && (
-          <Image
-            src={selectedCaseColor.image}
-            alt={selectedCase.name}
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            priority
-            className="object-contain drop-shadow-2xl"
-            style={{ zIndex: 10 }}
-          />
-        )}
-        
-        {currentDial && (
-          <Image
-            src={currentDial.image}
-            alt={currentDial.name}
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            priority
-            className="object-contain drop-shadow-lg"
-            style={{ zIndex: 1 }}
-          />
-        )}
-        
-        {currentHands && (
-          <Image
-            src={currentHands.image}
-            alt={currentHands.name}
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-contain drop-shadow-md"
-            style={{ zIndex: 30 }}
-          />
-        )}
-        
-        {currentRotor && (
-          <Image
-            src={currentRotor.image}
-            alt={currentRotor.name}
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-contain drop-shadow-md"
-            style={{ zIndex: 40 }}
-          />
-        )}
-        
-        {currentStrap && (
-          <Image
-            src={currentStrap.image}
-            alt={currentStrap.name}
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-contain drop-shadow-xl"
-            style={{ zIndex: 50 }}
-          />
-        )}
-
-        {currentBezel && (
-          <Image
-            src={currentBezel.image}
-            alt={currentBezel.name}
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-contain drop-shadow-xl"
-            style={{ zIndex: 60 }}
-          />
-        )}
-        
-      </div>
-    </div>
-  );
-}
-
-// Компонент для выбора цвета корпуса
-function ColorSelector({ 
-  selectedCase, 
-  selectedColor, 
-  onColorSelect 
-}: { 
-  selectedCase: WatchCase;
-  selectedColor: string;
-  onColorSelect: (color: string) => void;
-}) {
-  return (
-    <div className="overflow-y-auto h-full custom-scrollbar">
-      <div className="grid p-6 grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-5">
-        {selectedCase.colors.map((color) => (
-          <button
-            key={color.name}
-            onClick={() => onColorSelect(color.name)}
-            className={`rounded-xl p-3 min-w-[100px] bg-gradient-to-b from-white to-gray-50 shadow-md transition-transform hover:scale-105 active:scale-95 ${
-              selectedColor === color.name 
-                ? 'shadow-lg shadow-[var(--color-accent)]/50 ring-2 ring-[var(--color-accent)] bg-black/10' 
-                : 'hover:shadow-lg'
-            }`}
-          >
-            <div className="relative w-full h-40 overflow-hidden rounded-lg"
-            
-            >
-              <Image
-                src={color.image}
-                alt={color.name}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className={`object-contain scale-125 ${
-                  selectedColor === color.name ? 'contrast-125' : ''
-                }`}
-              />
-            </div>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// Компонент для выбора частей часов
-function PartSelector({ 
-  parts, 
-  selectedPart, 
-  onSelectPart 
-}: { 
-  parts: WatchPart[]; 
-  selectedPart: string; 
-  onSelectPart: (name: string) => void;
-}) {
-  return (
-    <div className="overflow-y-auto h-full custom-scrollbar">
-      <div className="grid p-6 grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-5">
-        {parts.map((part) => (
-          <button
-            key={part.name}
-            onClick={() => onSelectPart(part.name)}
-            className={`flex items-center justify-center rounded-xl bg-gradient-to-b from-white to-gray-50 shadow-md transition-transform hover:scale-105 active:scale-95 ${
-              selectedPart === part.name 
-                ? 'shadow-lg shadow-[var(--color-accent)]/50 ring-2 ring-[var(--color-accent)] bg-black/10' 
-                : 'hover:shadow-lg'
-            }`}
-          >
-            <div className={`relative size-32 overflow-hidden rounded-lg ${part.name[0] === 's' ? 'h-64' : ''}`}
-            
-            >
-              <Image
-                src={part.image}
-                alt={part.name}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 73vw"
-                className={`object-contain ${selectedPart === part.name ? 'contrast-125' : ''}`}
-                style={{ scale: 1.5, }}
-              />
-            </div>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// Навигация по шагам
-function StepNavigation({
-  currentStep,
-  totalSteps,
-  onPrevious,
-  onNext,
-  isNextDisabled
-}: {
-  currentStep: number;
-  totalSteps: number;
-  onPrevious: () => void;
-  onNext: () => void;
-  isNextDisabled: boolean;
-}) {
-  return (
-    <div className="flex justify-between items-center py-5 px-3">
-      <button
-        onClick={onPrevious}
-        disabled={currentStep === 0}
-        className={`px-5 py-3 mx-4 rounded-full shadow-md transition-transform hover:scale-105 active:scale-95 ${
-          currentStep === 0 
-            ? 'bg-[var(--color-disabled)] text-gray-500 cursor-not-allowed' 
-            : 'bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-accent-hover)] text-[var(--color-text-primary)]'
-        }`}
-      >
-        Назад
-      </button>
-      <div className="text-center font-medium text-[var(--color-text-secondary)]">
-        <span className="inline-block px-3 py-1 bg-[var(--color-bg-secondary)]/10 rounded-full">
-          {currentStep + 1} / {totalSteps}
-        </span>
-      </div>
-      <button
-        onClick={onNext}
-        disabled={isNextDisabled}
-        className={`px-5 py-3 mx-4 rounded-full shadow-md transition-transform hover:scale-105 active:scale-95 ${
-          isNextDisabled 
-            ? 'bg-[var(--color-disabled)] text-gray-500 cursor-not-allowed' 
-            : 'bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-accent-hover)] text-[var(--color-text-primary)]'
-        }`}
-      >
-        {currentStep === totalSteps - 1 ? 'Завершить' : 'Далее'}
-      </button>
-    </div>
-  );
-}
+import { WatchPreview } from './WatchPreview';
+import { ColorSelector } from './ColorSelector';
+import { PartSelector } from './PartSelector';
+import { StepNavigation } from './StepNavigation';
+import { CustomizeStepper } from './CustomizeStepper';
 
 // Основной клиентский компонент
 export default function CustomizeClient({ 
@@ -278,6 +52,7 @@ export default function CustomizeClient({
   const currentRotor = compatibleRotors.find(r => r.name === selectedRotor);
   const currentStrap = compatibleStraps.find(s => s.name === selectedStrap);
   const currentBezel = compatibleBezels.find(b => b.name === selectedBezel);
+
   // Определяем доступные шаги
   const steps = [
     { title: "Цвет корпуса", available: selectedCase.colors.length > 0 },
@@ -285,7 +60,8 @@ export default function CustomizeClient({
     { title: "Стрелки", available: selectedCase.availableParts.hasHands && compatibleHands.length > 0 },
     { title: "Ротор", available: selectedCase.availableParts.hasRotors && compatibleRotors.length > 0 },
     { title: "Ремешок", available: selectedCase.availableParts.hasStraps && compatibleStraps.length > 0 },
-    { title: "Безель", available: selectedCase.availableParts.hasBezel && compatibleBezels.length > 0 }
+    { title: "Безель", available: selectedCase.availableParts.hasBezel && compatibleBezels.length > 0 },
+    { title: "Заказ", available: true }
   ].filter(step => step.available);
 
   const handlePrevious = () => {
@@ -297,76 +73,6 @@ export default function CustomizeClient({
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
-    }
-  };
-
-  // Рендеринг текущего шага
-  const renderCurrentStep = () => {
-    const step = steps[currentStep];
-    
-    switch (step.title) {
-      case "Цвет корпуса":
-        return (
-          <div className="h-full flex flex-col">
-            <ColorSelector
-              selectedCase={selectedCase}
-              selectedColor={selectedColor}
-              onColorSelect={setSelectedColor}
-            />
-          </div>
-        );
-      case "Циферблат":
-        return (
-          <div className="h-full flex flex-col">
-            <PartSelector
-              parts={compatibleDials}
-              selectedPart={selectedDial}
-              onSelectPart={setSelectedDial}
-            />
-          </div>
-        );
-      case "Стрелки":
-        return (
-          <div className="h-full flex flex-col">
-            <PartSelector
-              parts={compatibleHands}
-              selectedPart={selectedHands}
-              onSelectPart={setSelectedHands}
-            />
-          </div>
-        );
-      case "Ротор":
-        return (
-          <div className="h-full flex flex-col">
-            <PartSelector
-              parts={compatibleRotors}
-              selectedPart={selectedRotor}
-              onSelectPart={setSelectedRotor}
-            />
-          </div>
-        );
-      case "Ремешок":
-        return (
-          <div className="h-full flex flex-col">
-            <PartSelector
-              parts={compatibleStraps}
-              selectedPart={selectedStrap}
-              onSelectPart={setSelectedStrap}
-            />
-          </div>
-        );
-      case "Безель":
-        return (
-          <div className="h-full flex flex-col">
-            <PartSelector
-              parts={compatibleBezels}
-              selectedPart={selectedBezel}
-              onSelectPart={setSelectedBezel}
-            />
-          </div>
-        );
-      default:
-        return null;
     }
   };
 
@@ -385,7 +91,10 @@ export default function CustomizeClient({
       </header>
       
       <div className="flex-grow flex flex-col md:flex-row overflow-hidden h-[calc(100vh-60px)]">
-        <div className="md:w-1/2 h-2/5 md:h-full lg:w-1/4 xl:w-1/5">
+        {/* Всегда показываем превью часов */}
+        <div className={`md:w-1/2 h-2/5 md:h-full lg:w-1/4 xl:w-1/5 ${
+          currentStep === steps.length - 1 ? 'md:block hidden' : ''
+        }`}>
           <WatchPreview
             selectedCase={selectedCase}
             selectedColor={selectedColor}
@@ -397,17 +106,38 @@ export default function CustomizeClient({
           />
         </div>
         
-        <div className="md:w-1/2 h-3/5 md:h-full lg:w-3/4 xl:w-4/5 flex flex-col bg-white/90 rounded-tl-3xl shadow-xl">
-          <div className="p-6 pb-0">
-            <h2 className="text-2xl font-bold text-[var(--color-bg-primary)] mb-1">
-              {steps[currentStep].title}
-            </h2>
-            <div className="h-1 w-24 bg-gradient-to-r from-[var(--color-accent)] to-transparent rounded-full mb-4"></div>
-          </div>
-          
-          <div className="flex-grow p-6 pt-0 overflow-hidden h-[calc(100vh-180px)]">
-            {renderCurrentStep()}
-          </div>
+        <div className={`${
+          currentStep === steps.length - 1 
+            ? 'w-full md:w-3/4 xl:w-4/5' 
+            : 'md:w-1/2 h-3/5 md:h-full lg:w-3/4 xl:w-4/5'
+        } flex flex-col bg-white/90 rounded-tl-3xl shadow-xl`}>
+          <CustomizeStepper 
+            selectedCase={selectedCase}
+            compatibleDials={compatibleDials}
+            compatibleHands={compatibleHands}
+            compatibleRotors={compatibleRotors}
+            compatibleStraps={compatibleStraps}
+            compatibleBezels={compatibleBezels}
+            selectedColor={selectedColor}
+            selectedDial={selectedDial}
+            selectedHands={selectedHands}
+            selectedRotor={selectedRotor}
+            selectedStrap={selectedStrap}
+            selectedBezel={selectedBezel}
+            setSelectedColor={setSelectedColor}
+            setSelectedDial={setSelectedDial}
+            setSelectedHands={setSelectedHands}
+            setSelectedRotor={setSelectedRotor}
+            setSelectedStrap={setSelectedStrap}
+            setSelectedBezel={setSelectedBezel}
+            currentStep={currentStep}
+            totalSteps={steps.length}
+            currentDial={currentDial}
+            currentHands={currentHands}
+            currentRotor={currentRotor}
+            currentStrap={currentStrap}
+            currentBezel={currentBezel}
+          />
           
           <div className="bg-white/50">
             <StepNavigation

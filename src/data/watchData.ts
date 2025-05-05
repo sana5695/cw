@@ -1,4 +1,4 @@
-export interface WatchCase {
+export type WatchCase = {
   name: string;
   image: string;
   colors: {
@@ -12,13 +12,15 @@ export interface WatchCase {
     hasStraps: boolean;
     hasBezel: boolean;
   };
-}
+  price?: number; // Опциональное поле для цены
+};
 
-export interface WatchPart {
+export type WatchPart = {
   name: string;
   image: string;
   compatibleCases: string[];
-}
+  price?: number; // Опциональное поле для цены
+};
 
 export interface WatchData {
   cases: WatchCase[];

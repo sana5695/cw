@@ -27,7 +27,7 @@ export default function Home() {
                   className="object-contain scale-125"
                 />
               </div>
-              <h2 className="text-xl font-semibold">{watchCase.name}</h2>
+              <h2 className="text-xl font-semibold text-black">{watchCase.name}</h2>
               <p className="text-gray-600 mt-2 mb-1">
                 <span className="px-3 py-1 rounded-full bg-[var(--color-accent)]/10 text-[var(--color-accent)] text-sm">
                   {watchCase.colors.length} вариантов цвета
