@@ -12,7 +12,8 @@ function WatchPreview({
   currentDial, 
   currentHands, 
   currentRotor, 
-  currentStrap 
+  currentStrap,
+  currentBezel
 }: { 
   selectedCase: WatchCase;
   selectedColor: string;
@@ -20,12 +21,13 @@ function WatchPreview({
   currentHands: WatchPart | undefined;
   currentRotor: WatchPart | undefined;
   currentStrap: WatchPart | undefined;
+  currentBezel: WatchPart | undefined;
 }) {
   // Находим выбранный цвет только один раз
   const selectedCaseColor = selectedCase.colors.find(c => c.name === selectedColor);
 
   return (
-    <div className="bg-gradient-to-br from-[var(--color-bg-primary)] to-[var(--color-bg-secondary)] rounded-lg p-6 flex flex-col items-center h-full shadow-2xl">
+    <div className="bg-gradient-to-br from-[var(--color-bg-primary)] to-[var(--color-bg-secondary)] rounded-lg flex flex-col items-center h-full shadow-2xl">
 
       <div className="relative w-full h-[calc(100%-2rem)] flex-grow">
         {selectedCaseColor && (
@@ -84,6 +86,18 @@ function WatchPreview({
             style={{ zIndex: 50 }}
           />
         )}
+
+        {currentBezel && (
+          <Image
+            src={currentBezel.image}
+            alt={currentBezel.name}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-contain drop-shadow-xl"
+            style={{ zIndex: 60 }}
+          />
+        )}
+        
       </div>
     </div>
   );
@@ -161,10 +175,9 @@ function PartSelector({
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 73vw"
                 className={`object-contain ${selectedPart === part.name ? 'contrast-125' : ''}`}
-                style={{ scale: 2.8 }}
+                style={{ scale: 2, }}
               />
             </div>
-            <p className="text-sm mt-3 text-center font-medium">{part.name}</p>
           </button>
         ))}
       </div>
@@ -225,13 +238,15 @@ export default function CustomizeClient({
   compatibleDials,
   compatibleHands,
   compatibleRotors,
-  compatibleStraps
+  compatibleStraps,
+  compatibleBezels
 }: {
   selectedCase: WatchCase;
   compatibleDials: WatchPart[];
   compatibleHands: WatchPart[];
   compatibleRotors: WatchPart[];
   compatibleStraps: WatchPart[];
+  compatibleBezels: WatchPart[];
 }) {
   // Состояние
   const [selectedColor, setSelectedColor] = useState<string>(
@@ -249,6 +264,9 @@ export default function CustomizeClient({
   const [selectedStrap, setSelectedStrap] = useState<string>(
     compatibleStraps.length > 0 ? compatibleStraps[0].name : ''
   );
+  const [selectedBezel, setSelectedBezel] = useState<string>(
+    compatibleBezels.length > 0 ? compatibleBezels[0].name : ''
+  );
   const [currentStep, setCurrentStep] = useState(0);
 
   // Получаем текущие выбранные компоненты
@@ -256,14 +274,15 @@ export default function CustomizeClient({
   const currentHands = compatibleHands.find(h => h.name === selectedHands);
   const currentRotor = compatibleRotors.find(r => r.name === selectedRotor);
   const currentStrap = compatibleStraps.find(s => s.name === selectedStrap);
-
+  const currentBezel = compatibleBezels.find(b => b.name === selectedBezel);
   // Определяем доступные шаги
   const steps = [
     { title: "Цвет корпуса", available: selectedCase.colors.length > 0 },
     { title: "Циферблат", available: selectedCase.availableParts.hasDials && compatibleDials.length > 0 },
     { title: "Стрелки", available: selectedCase.availableParts.hasHands && compatibleHands.length > 0 },
     { title: "Ротор", available: selectedCase.availableParts.hasRotors && compatibleRotors.length > 0 },
-    { title: "Ремешок", available: selectedCase.availableParts.hasStraps && compatibleStraps.length > 0 }
+    { title: "Ремешок", available: selectedCase.availableParts.hasStraps && compatibleStraps.length > 0 },
+    { title: "Безель", available: selectedCase.availableParts.hasBezel && compatibleBezels.length > 0 }
   ].filter(step => step.available);
 
   const handlePrevious = () => {
@@ -333,6 +352,16 @@ export default function CustomizeClient({
             />
           </div>
         );
+      case "Безель":
+        return (
+          <div className="h-full flex flex-col">
+            <PartSelector
+              parts={compatibleBezels}
+              selectedPart={selectedBezel}
+              onSelectPart={setSelectedBezel}
+            />
+          </div>
+        );
       default:
         return null;
     }
@@ -353,7 +382,7 @@ export default function CustomizeClient({
       </header>
       
       <div className="flex-grow flex flex-col md:flex-row overflow-hidden h-[calc(100vh-60px)]">
-        <div className="md:w-1/2 h-1/3 md:h-full lg:w-1/4 xl:w-1/5 p-4">
+        <div className="md:w-1/2 h-2/5 md:h-full lg:w-1/4 xl:w-1/5">
           <WatchPreview
             selectedCase={selectedCase}
             selectedColor={selectedColor}
@@ -361,10 +390,11 @@ export default function CustomizeClient({
             currentHands={currentHands}
             currentRotor={currentRotor}
             currentStrap={currentStrap}
+            currentBezel={currentBezel}
           />
         </div>
         
-        <div className="md:w-1/2 h-2/3 md:h-full lg:w-3/4 xl:w-4/5 flex flex-col bg-white/90 rounded-tl-3xl shadow-xl">
+        <div className="md:w-1/2 h-3/5 md:h-full lg:w-3/4 xl:w-4/5 flex flex-col bg-white/90 rounded-tl-3xl shadow-xl">
           <div className="p-6 pb-0">
             <h2 className="text-2xl font-bold text-[var(--color-bg-primary)] mb-1">
               {steps[currentStep].title}

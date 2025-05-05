@@ -35,6 +35,10 @@ export default async function CustomizePage({
   const compatibleStraps = watchData.straps.filter(
     strap => strap.compatibleCases.length === 0 || strap.compatibleCases.includes(decodedCaseId)
   );
+
+  const compatibleBezels = watchData.bezels.filter(
+    bezel => bezel.compatibleCases.length === 0 || bezel.compatibleCases.includes(decodedCaseId)
+  );
   
   // Рендерим клиентский компонент с предварительно загруженными данными
   return (
@@ -45,6 +49,7 @@ export default async function CustomizePage({
         compatibleHands={compatibleHands}
         compatibleRotors={compatibleRotors}
         compatibleStraps={compatibleStraps}
+        compatibleBezels={compatibleBezels}
       />
     </Suspense>
   );
