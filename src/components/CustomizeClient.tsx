@@ -26,8 +26,7 @@ function WatchPreview({
 
   return (
     <div className="bg-gradient-to-br from-[var(--color-bg-primary)] to-[var(--color-bg-secondary)] rounded-lg p-6 flex flex-col items-center h-full shadow-2xl">
-      <h2 className="text-xl font-bold mb-4 text-[var(--color-text-primary)] tracking-wide">Предпросмотр</h2>
-      
+
       <div className="relative w-full h-[calc(100%-2rem)] flex-grow">
         {selectedCaseColor && (
           <Image
@@ -155,13 +154,14 @@ function PartSelector({
                 : 'hover:shadow-lg'
             }`}
           >
-            <div className="relative w-full h-40 overflow-hidden rounded-lg">
+            <div className="relative w-full h-20 overflow-hidden rounded-lg">
               <Image
                 src={part.image}
                 alt={part.name}
                 fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className={`object-contain scale-250 ${selectedPart === part.name ? 'contrast-125' : ''}`}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 73vw"
+                className={`object-contain ${selectedPart === part.name ? 'contrast-125' : ''}`}
+                style={{ scale: 2.8 }}
               />
             </div>
             <p className="text-sm mt-3 text-center font-medium">{part.name}</p>
@@ -353,7 +353,7 @@ export default function CustomizeClient({
       </header>
       
       <div className="flex-grow flex flex-col md:flex-row overflow-hidden h-[calc(100vh-60px)]">
-        <div className="md:w-1/2 h-1/2 md:h-full lg:w-1/4 xl:w-1/5 p-4">
+        <div className="md:w-1/2 h-1/3 md:h-full lg:w-1/4 xl:w-1/5 p-4">
           <WatchPreview
             selectedCase={selectedCase}
             selectedColor={selectedColor}
@@ -364,7 +364,7 @@ export default function CustomizeClient({
           />
         </div>
         
-        <div className="md:w-1/2 h-1/2 md:h-full lg:w-3/4 xl:w-4/5 flex flex-col bg-white/90 rounded-tl-3xl shadow-xl">
+        <div className="md:w-1/2 h-2/3 md:h-full lg:w-3/4 xl:w-4/5 flex flex-col bg-white/90 rounded-tl-3xl shadow-xl">
           <div className="p-6 pb-0">
             <h2 className="text-2xl font-bold text-[var(--color-bg-primary)] mb-1">
               {steps[currentStep].title}
