@@ -48,6 +48,7 @@ function WatchPreview({
             alt={currentDial.name}
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
+            priority
             className="object-contain drop-shadow-lg"
             style={{ zIndex: 1 }}
           />
@@ -102,18 +103,18 @@ function ColorSelector({
 }) {
   return (
     <div className="overflow-y-auto h-full custom-scrollbar">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {selectedCase.colors.map((color) => (
           <button
             key={color.name}
             onClick={() => onColorSelect(color.name)}
-            className={`rounded-xl p-3 min-w-[150px] bg-gradient-to-b from-white to-gray-50 shadow-md transition-transform hover:scale-105 active:scale-95 ${
+            className={`rounded-xl p-3 min-w-[100px] bg-gradient-to-b from-white to-gray-50 shadow-md transition-transform hover:scale-105 active:scale-95 ${
               selectedColor === color.name 
                 ? 'shadow-lg shadow-[var(--color-accent)]/50 ring-2 ring-[var(--color-accent)] bg-black/10' 
                 : 'hover:shadow-lg'
             }`}
           >
-            <div className="relative w-full h-60 overflow-hidden rounded-lg">
+            <div className="relative w-full h-40 overflow-hidden rounded-lg">
               <Image
                 src={color.image}
                 alt={color.name}
@@ -155,15 +156,13 @@ function PartSelector({
                 : 'hover:shadow-lg'
             }`}
           >
-            <div className="relative w-full h-30 overflow-hidden rounded-lg">
+            <div className="relative w-full h-40 overflow-hidden rounded-lg">
               <Image
                 src={part.image}
                 alt={part.name}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className={`object-contain scale-200 ${
-                  selectedPart === part.name ? 'contrast-125' : ''
-                }`}
+                className={`object-contain scale-250 ${selectedPart === part.name ? 'contrast-125' : ''}`}
               />
             </div>
             <p className="text-sm mt-3 text-center font-medium">{part.name}</p>

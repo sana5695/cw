@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
   },
   // Отключаем экспериментальные функции, которые могут вызывать конфликты
   experimental: {
-    serverActions: false
+
   }
 };
 
