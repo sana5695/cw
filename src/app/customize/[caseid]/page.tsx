@@ -11,7 +11,7 @@ export default async function CustomizePage({
 }) {
   // Декодируем и находим выбранный корпус
   const { caseid } = await params
-  const decodedCaseId = decodeURIComponent(caseid);
+  const decodedCaseId = caseid;
   const foundCase = watchData.cases.find(c => c.name === decodedCaseId);
   
   // Если корпус не найден, показываем 404

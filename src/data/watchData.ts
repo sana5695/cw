@@ -1,5 +1,3 @@
-import { getAppPath } from '../utils/url';
-
 export interface WatchCase {
   name: string;
   image: string;
@@ -31,7 +29,7 @@ export interface WatchData {
 
 // Функция для добавления базового пути к изображениям
 function getImagePath(path: string): string {
-  return getAppPath(path);
+  return (path);
 }
 
 const watchData: WatchData = {

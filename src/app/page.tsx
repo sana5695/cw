@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import watchData from '../data/watchData';
-import { getAppPath } from '../utils/url';
 
 export default function Home() {
   return (
@@ -13,7 +12,7 @@ export default function Home() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {watchData.cases.map((watchCase) => (
           <Link 
-            href={getAppPath(`/customize/${encodeURIComponent(watchCase.name)}`)}
+            href={(`/customize/${watchCase.name}`)}
             key={watchCase.name}
             className="rounded-xl p-4 min-w-[180px] bg-gradient-to-b from-white to-gray-50 shadow-md transition-transform hover:scale-105 hover:shadow-lg"
           >
