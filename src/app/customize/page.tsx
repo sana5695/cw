@@ -8,9 +8,9 @@ import { Footer } from '@/components/Footer';
 
 export default function Home() {
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Header />
-    <main className="min-h-screen p-8 bg-gradient-to-b from-[var(--color-bg-primary)] to-[var(--color-bg-secondary)]">
+    <main className=" p-8">
       <h1 className="text-3xl font-bold mb-8 text-center text-[var(--color-text-primary)]">Выберите корпус часов</h1>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

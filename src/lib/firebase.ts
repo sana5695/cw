@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 // TODO: Replace with your Firebase configuration
 const firebaseConfig = {
@@ -19,5 +20,8 @@ const app = initializeApp(firebaseConfig);
 
 // Получаем доступ к Firestore
 export const db = getFirestore(app);
+
+// Получаем доступ к Auth
+export const auth = getAuth(app);
 
 export default app; 
