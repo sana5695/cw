@@ -6,7 +6,7 @@ export default function Home() {
     <div>
         <Header />
         <main>
-            <h1>Главная</h1>
+            <h1>О нас</h1>
         </main>
         <Footer />
     </div>
