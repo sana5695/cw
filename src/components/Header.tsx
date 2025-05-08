@@ -2,8 +2,8 @@ import Link from 'next/link';
 
 export function Header() {
     return (
-        <header className="bg-[var(--color-bg-secondary)] py-4 px-6 sticky top-0 z-10 shadow-md">
-            <nav className="flex flex-wrap items-center justify-center gap-6 md:gap-10 max-w-6xl mx-auto">
+        <header className="bg-[var(--color-bg-secondary)] py-4 px-2 md:px-6 sticky top-0 z-10 shadow-md">
+            <nav className="flex flex-wrap items-center justify-center gap-4 md:gap-10 max-w-6xl mx-auto">
                 <Link href="/" className="text-[var(--color-text-primary)] hover:text-[var(--color-accent)] transition-colors font-medium">
                     Главная
                 </Link>
