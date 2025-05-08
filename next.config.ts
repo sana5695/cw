@@ -3,7 +3,15 @@ import { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
-    domains: [],
+    domains: ['i.ibb.co'],
+    // Альтернативно, можно использовать более детальную настройку:
+    // remotePatterns: [
+    //   {
+    //     protocol: 'https',
+    //     hostname: 'i.ibb.co',
+    //     pathname: '**',
+    //   },
+    // ],
   },
   // Отключаем строгую типизацию для страниц
   typescript: {

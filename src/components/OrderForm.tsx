@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { WatchCase, WatchPart } from '../data/watchData';
+import { FirebaseWatchCase } from '@/services/watchDataService';
 
 type ContactMethod = 'phone' | 'telegram' | 'whatsapp' | 'viber';
 
 type OrderFormProps = {
-  selectedCase: WatchCase;
+  selectedCase: FirebaseWatchCase;
   selectedColor: string;
   selectedDial: string;
   selectedHands: string;

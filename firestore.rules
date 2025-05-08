@@ -1,0 +1,31 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Базовые правила для аутентификации
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Правила для админ-страницы
+    match /admin/{document=**} {
+      allow read, write: if isAuthenticated();
+    }
+    
+    // Правила для страницы входа
+    match /login/{document=**} {
+      allow read, write: if true;
+    }
+    
+    // Правила для страницы кастомизации
+    match /customization/{document=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+    
+    // Правила для всех остальных данных
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+} 

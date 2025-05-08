@@ -261,7 +261,7 @@ const watchData: WatchData = {
     },
     {
       "name": "b2",
-      "image": getImagePath("/images/bezel/c2/b2.png"),
+      "image": "https://i.ibb.co/Mkk5mGjH/b2.png",
       "compatibleCases": ["Speedmaster"]
     },
     {

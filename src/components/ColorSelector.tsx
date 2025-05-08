@@ -1,18 +1,21 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { WatchCase } from '../data/watchData';
+import { FirebaseWatchCase } from '@/services/watchDataService';
+
+interface ColorSelectorProps {
+  selectedCase: FirebaseWatchCase;
+  selectedColor: string;
+  onColorSelect: (color: string) => void;
+}
 
 // Компонент для выбора цвета корпуса
 export function ColorSelector({ 
   selectedCase, 
   selectedColor, 
   onColorSelect 
-}: { 
-  selectedCase: WatchCase;
-  selectedColor: string;
-  onColorSelect: (color: string) => void;
-}) {
+}: ColorSelectorProps) {
   return (
     <div className="overflow-y-auto h-full custom-scrollbar">
       <div className="grid p-6 grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-5">

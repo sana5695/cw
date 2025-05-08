@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { WatchCase, WatchPart } from '../data/watchData';
 import { WatchPreview } from './WatchPreview';
 import { ColorSelector } from './ColorSelector';
 import { PartSelector } from './PartSelector';
 import { StepNavigation } from './StepNavigation';
 import { CustomizeStepper } from './CustomizeStepper';
+import { FirebaseWatchCase, FirebaseWatchPart } from '@/services/watchDataService';
 
 // Основной клиентский компонент
 export default function CustomizeClient({ 
@@ -18,35 +18,80 @@ export default function CustomizeClient({
   compatibleStraps,
   compatibleBezels
 }: {
-  selectedCase: WatchCase;
-  compatibleDials: WatchPart[];
-  compatibleHands: WatchPart[];
-  compatibleRotors: WatchPart[];
-  compatibleStraps: WatchPart[];
-  compatibleBezels: WatchPart[];
+  selectedCase: FirebaseWatchCase;
+  compatibleDials: FirebaseWatchPart[];
+  compatibleHands: FirebaseWatchPart[];
+  compatibleRotors: FirebaseWatchPart[];
+  compatibleStraps: FirebaseWatchPart[];
+  compatibleBezels: FirebaseWatchPart[];
 }) {
-  // Состояние
+  // Состояние для выбранного цвета
   const [selectedColor, setSelectedColor] = useState<string>(
     selectedCase.colors.length > 0 ? selectedCase.colors[0].name : ''
   );
-  const [selectedDial, setSelectedDial] = useState<string>(
-    compatibleDials.length > 0 ? compatibleDials[0].name : ''
-  );
-  const [selectedHands, setSelectedHands] = useState<string>(
-    compatibleHands.length > 0 ? compatibleHands[0].name : ''
-  );
-  const [selectedRotor, setSelectedRotor] = useState<string>(
-    compatibleRotors.length > 0 ? compatibleRotors[0].name : ''
-  );
-  const [selectedStrap, setSelectedStrap] = useState<string>(
-    compatibleStraps.length > 0 ? compatibleStraps[0].name : ''
-  );
-  const [selectedBezel, setSelectedBezel] = useState<string>(
-    compatibleBezels.length > 0 ? compatibleBezels[0].name : ''
-  );
+  
+  // Состояние для выбранных деталей - имена
+  const [selectedDial, setSelectedDial] = useState<string | null>(null);
+  const [selectedHands, setSelectedHands] = useState<string | null>(null);
+  const [selectedRotor, setSelectedRotor] = useState<string | null>(null);
+  const [selectedStrap, setSelectedStrap] = useState<string | null>(null);
+  const [selectedBezel, setSelectedBezel] = useState<string | null>(null);
+  
+  // Состояние для выбранных деталей - ID
+  const [selectedDialId, setSelectedDialId] = useState<string | null>(null);
+  const [selectedHandsId, setSelectedHandsId] = useState<string | null>(null);
+  const [selectedRotorId, setSelectedRotorId] = useState<string | null>(null);
+  const [selectedStrapId, setSelectedStrapId] = useState<string | null>(null);
+  const [selectedBezelId, setSelectedBezelId] = useState<string | null>(null);
+  
   const [currentStep, setCurrentStep] = useState(0);
 
-  // Получаем текущие выбранные компоненты
+  // Автоматически выбираем первые детали при загрузке
+  useEffect(() => {
+    if (compatibleDials.length > 0 && !selectedDial) {
+      handleSetDial(compatibleDials[0].id!, compatibleDials[0].name);
+    }
+    if (compatibleHands.length > 0 && !selectedHands) {
+      handleSetHands(compatibleHands[0].id!, compatibleHands[0].name);
+    }
+    if (compatibleRotors.length > 0 && !selectedRotor) {
+      handleSetRotor(compatibleRotors[0].id!, compatibleRotors[0].name);
+    }
+    if (compatibleStraps.length > 0 && !selectedStrap) {
+      handleSetStrap(compatibleStraps[0].id!, compatibleStraps[0].name);
+    }
+    if (compatibleBezels.length > 0 && !selectedBezel) {
+      handleSetBezel(compatibleBezels[0].id!, compatibleBezels[0].name);
+    }
+  }, [compatibleDials, compatibleHands, compatibleRotors, compatibleStraps, compatibleBezels]);
+
+  // Функции установки выбранных деталей
+  const handleSetDial = (partId: string, partName: string) => {
+    setSelectedDialId(partId);
+    setSelectedDial(partName);
+  };
+
+  const handleSetHands = (partId: string, partName: string) => {
+    setSelectedHandsId(partId);
+    setSelectedHands(partName);
+  };
+
+  const handleSetRotor = (partId: string, partName: string) => {
+    setSelectedRotorId(partId);
+    setSelectedRotor(partName);
+  };
+
+  const handleSetStrap = (partId: string, partName: string) => {
+    setSelectedStrapId(partId);
+    setSelectedStrap(partName);
+  };
+
+  const handleSetBezel = (partId: string, partName: string) => {
+    setSelectedBezelId(partId);
+    setSelectedBezel(partName);
+  };
+
+  // Получаем текущие выбранные компоненты для предпросмотра
   const currentDial = compatibleDials.find(d => d.name === selectedDial);
   const currentHands = compatibleHands.find(h => h.name === selectedHands);
   const currentRotor = compatibleRotors.find(r => r.name === selectedRotor);
@@ -56,11 +101,11 @@ export default function CustomizeClient({
   // Определяем доступные шаги
   const steps = [
     { title: "Цвет корпуса", available: selectedCase.colors.length > 0 },
-    { title: "Циферблат", available: selectedCase.availableParts.hasDials && compatibleDials.length > 0 },
-    { title: "Стрелки", available: selectedCase.availableParts.hasHands && compatibleHands.length > 0 },
-    { title: "Ротор", available: selectedCase.availableParts.hasRotors && compatibleRotors.length > 0 },
-    { title: "Ремешок", available: selectedCase.availableParts.hasStraps && compatibleStraps.length > 0 },
-    { title: "Безель", available: selectedCase.availableParts.hasBezel && compatibleBezels.length > 0 },
+    { title: "Циферблат", available: selectedCase.availableParts.hasDials },
+    { title: "Стрелки", available: selectedCase.availableParts.hasHands },
+    { title: "Ротор", available: selectedCase.availableParts.hasRotors },
+    { title: "Ремешок", available: selectedCase.availableParts.hasStraps },
+    { title: "Безель", available: selectedCase.availableParts.hasBezel },
     { title: "Заказ", available: true }
   ].filter(step => step.available);
 
@@ -120,16 +165,21 @@ export default function CustomizeClient({
             compatibleBezels={compatibleBezels}
             selectedColor={selectedColor}
             selectedDial={selectedDial}
+            selectedDialId={selectedDialId}
             selectedHands={selectedHands}
+            selectedHandsId={selectedHandsId}
             selectedRotor={selectedRotor}
+            selectedRotorId={selectedRotorId}
             selectedStrap={selectedStrap}
+            selectedStrapId={selectedStrapId}
             selectedBezel={selectedBezel}
+            selectedBezelId={selectedBezelId}
             setSelectedColor={setSelectedColor}
-            setSelectedDial={setSelectedDial}
-            setSelectedHands={setSelectedHands}
-            setSelectedRotor={setSelectedRotor}
-            setSelectedStrap={setSelectedStrap}
-            setSelectedBezel={setSelectedBezel}
+            setSelectedDial={handleSetDial}
+            setSelectedHands={handleSetHands}
+            setSelectedRotor={handleSetRotor}
+            setSelectedStrap={handleSetStrap}
+            setSelectedBezel={handleSetBezel}
             currentStep={currentStep}
             totalSteps={steps.length}
             currentDial={currentDial}

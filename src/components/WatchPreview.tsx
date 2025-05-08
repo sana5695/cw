@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { WatchCase, WatchPart } from '../data/watchData';
+import { FirebaseWatchCase, FirebaseWatchPart } from '@/services/watchDataService';
 
 // Компонент для отображения превью часов 
 export function WatchPreview({ 
@@ -14,13 +14,13 @@ export function WatchPreview({
   currentBezel,
   compactMode = false
 }: { 
-  selectedCase: WatchCase;
+  selectedCase: FirebaseWatchCase;
   selectedColor: string;
-  currentDial: WatchPart | undefined;
-  currentHands: WatchPart | undefined;
-  currentRotor: WatchPart | undefined;
-  currentStrap: WatchPart | undefined;
-  currentBezel: WatchPart | undefined;
+  currentDial: FirebaseWatchPart | undefined;
+  currentHands: FirebaseWatchPart | undefined;
+  currentRotor: FirebaseWatchPart | undefined;
+  currentStrap: FirebaseWatchPart | undefined;
+  currentBezel: FirebaseWatchPart | undefined;
   compactMode?: boolean; // Режим компактного отображения для страницы заказа
 }) {
   // Находим выбранный цвет только один раз

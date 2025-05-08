@@ -1,39 +1,44 @@
 'use client';
 
 import { useState } from 'react';
-import { WatchCase, WatchPart } from '../data/watchData';
 import { PartSelector } from './PartSelector';
 import { ColorSelector } from './ColorSelector';
 import { OrderForm, OrderFormData } from './OrderForm';
 import { submitOrder } from '../services/orderService';
 import { WatchPreview } from './WatchPreview';
+import { FirebaseWatchCase, FirebaseWatchPart } from '@/services/watchDataService';
 
 type StepperProps = {
-  selectedCase: WatchCase;
-  compatibleDials: WatchPart[];
-  compatibleHands: WatchPart[];
-  compatibleRotors: WatchPart[];
-  compatibleStraps: WatchPart[];
-  compatibleBezels: WatchPart[];
+  selectedCase: FirebaseWatchCase;
+  compatibleDials: FirebaseWatchPart[];
+  compatibleHands: FirebaseWatchPart[];
+  compatibleRotors: FirebaseWatchPart[];
+  compatibleStraps: FirebaseWatchPart[];
+  compatibleBezels: FirebaseWatchPart[];
   selectedColor: string;
-  selectedDial: string;
-  selectedHands: string;
-  selectedRotor: string;
-  selectedStrap: string;
-  selectedBezel: string;
+  selectedDial: string | null;
+  selectedDialId: string | null;
+  selectedHands: string | null;
+  selectedHandsId: string | null;
+  selectedRotor: string | null;
+  selectedRotorId: string | null;
+  selectedStrap: string | null;
+  selectedStrapId: string | null;
+  selectedBezel: string | null;
+  selectedBezelId: string | null;
   setSelectedColor: (color: string) => void;
-  setSelectedDial: (dial: string) => void;
-  setSelectedHands: (hands: string) => void;
-  setSelectedRotor: (rotor: string) => void;
-  setSelectedStrap: (strap: string) => void;
-  setSelectedBezel: (bezel: string) => void;
+  setSelectedDial: (partId: string, partName: string) => void;
+  setSelectedHands: (partId: string, partName: string) => void;
+  setSelectedRotor: (partId: string, partName: string) => void;
+  setSelectedStrap: (partId: string, partName: string) => void;
+  setSelectedBezel: (partId: string, partName: string) => void;
   currentStep: number;
   totalSteps: number;
-  currentDial: WatchPart | undefined;
-  currentHands: WatchPart | undefined;
-  currentRotor: WatchPart | undefined;
-  currentStrap: WatchPart | undefined;
-  currentBezel: WatchPart | undefined;
+  currentDial: FirebaseWatchPart | undefined;
+  currentHands: FirebaseWatchPart | undefined;
+  currentRotor: FirebaseWatchPart | undefined;
+  currentStrap: FirebaseWatchPart | undefined;
+  currentBezel: FirebaseWatchPart | undefined;
 }
 
 export function CustomizeStepper({
@@ -45,10 +50,15 @@ export function CustomizeStepper({
   compatibleBezels,
   selectedColor,
   selectedDial,
+  selectedDialId,
   selectedHands,
+  selectedHandsId,
   selectedRotor,
+  selectedRotorId,
   selectedStrap,
+  selectedStrapId,
   selectedBezel,
+  selectedBezelId,
   setSelectedColor,
   setSelectedDial,
   setSelectedHands,
@@ -71,11 +81,11 @@ export function CustomizeStepper({
   // Определяем доступные шаги
   const steps = [
     { title: "Цвет корпуса", available: selectedCase.colors.length > 0 },
-    { title: "Циферблат", available: selectedCase.availableParts.hasDials && compatibleDials.length > 0 },
-    { title: "Стрелки", available: selectedCase.availableParts.hasHands && compatibleHands.length > 0 },
-    { title: "Ротор", available: selectedCase.availableParts.hasRotors && compatibleRotors.length > 0 },
-    { title: "Ремешок", available: selectedCase.availableParts.hasStraps && compatibleStraps.length > 0 },
-    { title: "Безель", available: selectedCase.availableParts.hasBezel && compatibleBezels.length > 0 },
+    { title: "Циферблат", available: selectedCase.availableParts.hasDials },
+    { title: "Стрелки", available: selectedCase.availableParts.hasHands },
+    { title: "Ротор", available: selectedCase.availableParts.hasRotors },
+    { title: "Ремешок", available: selectedCase.availableParts.hasStraps },
+    { title: "Безель", available: selectedCase.availableParts.hasBezel },
     { title: "Заказ", available: true }
   ].filter(step => step.available);
   
@@ -98,13 +108,19 @@ export function CustomizeStepper({
     setErrorMessage(null);
     
     try {
-      // Добавляем цену к заказу
-      const formDataWithPrice = {
+      // Добавляем цену и идентификаторы деталей к заказу
+      const formDataWithDetails = {
         ...formData,
         totalPrice: calculateTotal(),
+        caseId: selectedCase.id,
+        dialId: selectedDialId,
+        handsId: selectedHandsId,
+        rotorId: selectedRotorId,
+        strapId: selectedStrapId,
+        bezelId: selectedBezelId
       };
       
-      const id = await submitOrder(formDataWithPrice);
+      const id = await submitOrder(formDataWithDetails);
       setOrderId(id);
       setOrderSubmitted(true);
     } catch (error) {
@@ -173,11 +189,11 @@ export function CustomizeStepper({
               <OrderForm
                 selectedCase={selectedCase}
                 selectedColor={selectedColor}
-                selectedDial={selectedDial}
-                selectedHands={selectedHands}
-                selectedRotor={selectedRotor}
-                selectedStrap={selectedStrap}
-                selectedBezel={selectedBezel}
+                selectedDial={selectedDial || ''}
+                selectedHands={selectedHands || ''}
+                selectedRotor={selectedRotor || ''}
+                selectedStrap={selectedStrap || ''}
+                selectedBezel={selectedBezel || ''}
                 onSubmit={handleSubmitOrder}
                 isSubmitting={isSubmitting}
               />
@@ -261,9 +277,10 @@ export function CustomizeStepper({
         return (
           <div className="h-full flex flex-col">
             <PartSelector
-              parts={compatibleDials}
-              selectedPart={selectedDial}
+              partType="dial"
+              selectedPart={selectedDialId}
               onSelectPart={setSelectedDial}
+              caseName={selectedCase.name}
             />
           </div>
         );
@@ -271,9 +288,10 @@ export function CustomizeStepper({
         return (
           <div className="h-full flex flex-col">
             <PartSelector
-              parts={compatibleHands}
-              selectedPart={selectedHands}
+              partType="hand"
+              selectedPart={selectedHandsId}
               onSelectPart={setSelectedHands}
+              caseName={selectedCase.name}
             />
           </div>
         );
@@ -281,9 +299,10 @@ export function CustomizeStepper({
         return (
           <div className="h-full flex flex-col">
             <PartSelector
-              parts={compatibleRotors}
-              selectedPart={selectedRotor}
+              partType="rotor"
+              selectedPart={selectedRotorId}
               onSelectPart={setSelectedRotor}
+              caseName={selectedCase.name}
             />
           </div>
         );
@@ -291,9 +310,10 @@ export function CustomizeStepper({
         return (
           <div className="h-full flex flex-col">
             <PartSelector
-              parts={compatibleStraps}
-              selectedPart={selectedStrap}
+              partType="strap"
+              selectedPart={selectedStrapId}
               onSelectPart={setSelectedStrap}
+              caseName={selectedCase.name}
             />
           </div>
         );
@@ -301,9 +321,10 @@ export function CustomizeStepper({
         return (
           <div className="h-full flex flex-col">
             <PartSelector
-              parts={compatibleBezels}
-              selectedPart={selectedBezel}
+              partType="bezel"
+              selectedPart={selectedBezelId}
               onSelectPart={setSelectedBezel}
+              caseName={selectedCase.name}
             />
           </div>
         );
