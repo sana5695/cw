@@ -23,7 +23,7 @@ export default function Home() {
                 </div>
                 
                 <div className="bg-[var(--color-bg-secondary)] p-6 rounded-lg shadow-md">
-                    <p className="text-[var(--color-text-secondary)] mb-4">Добро пожаловать в магазин уникальных часов NOCOPY WATCH STORE! Создайте свои неповторимые часы с помощью нашего  
+                    <p className="text-[var(--color-text-secondary)] mb-4">Добро  Пожаловать в магазин уникальных часов NOCOPY WATCH STORE! Создайте свои неповторимые часы с помощью нашего
                         <Link href="/customize" className="text-[var(--color-accent)] hover:text-[var(--color-accent-hover)] transition-colors"> конструктора</Link>.</p>
                 </div>
             </div>
