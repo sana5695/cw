@@ -23,6 +23,12 @@ service cloud.firestore {
       allow write: if isAuthenticated();
     }
     
+    // Правила для страниц с контентом
+    match /pages/{pageId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+    
     // Правила для всех остальных данных
     match /{document=**} {
       allow read, write: if true;

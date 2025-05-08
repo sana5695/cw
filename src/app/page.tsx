@@ -1,15 +1,16 @@
+'use client';
+
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import PageContent from '@/components/PageContent';
 import Image from 'next/image';
-import Link from 'next/link';
-export default function Home() {
+export default function HomePage() {
   return (
-    
     <div className="flex flex-col min-h-screen">
-        <Header />
-        <main className="flex-grow py-10 px-6">
-            <div className="max-w-6xl mx-auto">
-                <div className="flex flex-col items-center justify-center py-10 mb-10">
+      <Header />
+      <main className="flex-grow py-10 px-6">
+        <div className="max-w-4xl mx-auto">
+        <div className="flex flex-col items-center justify-center py-10 mb-10">
                     <div className="flex flex-row md:flex-row items-center justify-center gap-0 md:gap-2">
                         <div className="relative w-28 h-40 md:w-50 md:h-70">
                             <Image className=" rotate-12"  src="/images/cases/c1.png" alt="Logo" fill sizes="100vh , 100vw" />
@@ -21,14 +22,10 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
-                
-                <div className="bg-[var(--color-bg-secondary)] p-6 rounded-lg shadow-md">
-                    <p className="text-[var(--color-text-secondary)] mb-4">Добро ПОжаловать в магазин уникальных часов NOCOPY WATCH STORE! Создайте свои неповторимые часы с помощью нашего
-                        <Link href="/customize" className="text-[var(--color-accent)] hover:text-[var(--color-accent-hover)] transition-colors"> конструктора</Link>.</p>
-                </div>
-            </div>
-        </main>
-        <Footer />
+          <PageContent pageId="home" />
+        </div>
+      </main>
+      <Footer />
     </div>
   );
 }
