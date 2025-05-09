@@ -1,19 +1,21 @@
 'use client';
 
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
+import Image from 'next/image';
+import { Header } from '@/components/ui/Header';
+import { Footer } from '@/components/ui/Footer';
 import PageContent from '@/components/PageContent';
+import styles from './page.module.scss';
+
 
 export default function AboutPage() {
   return (
-    <div className="flex flex-col min-h-screen">
-        <Header />
-        <main className="flex-grow py-10 px-6">
-        <div className="max-w-4xl mx-auto">
-          <PageContent pageId="about" />
-            </div>
-        </main>
-        <Footer />
+    <div className={styles.container}>
+      <Header />
+      
+      
+      <PageContent pageId="about" />
+      
+      <Footer />
     </div>
   );
 }

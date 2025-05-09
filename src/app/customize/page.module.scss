@@ -1,0 +1,48 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main {
+  flex-grow: 1;
+  padding: 2rem 1rem;
+  background: linear-gradient(to bottom, var(--color-bg-primary), var(--color-bg-secondary));
+}
+
+.content {
+  max-width: 78rem;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 2rem;
+  text-align: center;
+  
+  @media (min-width: 768px) {
+    font-size: 2.25rem;
+  }
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 2.5rem;
+  text-align: center;
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+  
+  @media (min-width: 768px) {
+    font-size: 1.25rem;
+  }
+}
+
+.casesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1.5rem;
+} 

@@ -1,0 +1,79 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main {
+  flex-grow: 1;
+  padding: 2.5rem 1.5rem;
+}
+
+.content {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 0;
+  margin-bottom: 2.5rem;
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  
+  @media (min-width: 768px) {
+    gap: 0.5rem;
+  }
+}
+
+.logoContainer {
+  position: relative;
+  width: 7rem;
+  height: 10rem;
+  
+  @media (min-width: 768px) {
+    width: 12.5rem;
+    height: 17.5rem;
+  }
+}
+
+.logoImage {
+  transform: rotate(12deg);
+}
+
+.titleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.titleLine {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+  
+  @media (min-width: 768px) {
+    font-size: 4.5rem;
+  }
+}
+
+.titleLineSmall {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+  
+  @media (min-width: 768px) {
+    font-size: 3.75rem;
+  }
+} 

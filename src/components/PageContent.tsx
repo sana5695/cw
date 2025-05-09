@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, memo, useCallback, Suspense } from 'react';
+import { useState, useEffect, memo, useCallback } from 'react';
 import type { PageContent } from '@/services/pageContentService';
 import { getPageContent } from '@/services/pageContentService';
 
@@ -80,7 +80,7 @@ function PageContentComponent({ pageId }: PageContentProps) {
 
   return (
     <div className="prose max-w-none">
-      <h1 className="text-3xl font-bold mb-6">{content.title}</h1>
+      <div dangerouslySetInnerHTML={{ __html: content.title }} />
       <div dangerouslySetInnerHTML={{ __html: content.content }} />
     </div>
   );

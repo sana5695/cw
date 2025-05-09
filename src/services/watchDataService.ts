@@ -13,7 +13,6 @@ import {
   Timestamp,
   writeBatch
 } from 'firebase/firestore';
-import watchData from '../data/watchData';
 
 // Типы данных для работы с часами в Firebase
 export type FirebaseWatchCase = {
@@ -31,6 +30,7 @@ export type FirebaseWatchCase = {
     hasStraps: boolean;
     hasBezel: boolean;
   };
+  description?: string;
   price?: number;
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
@@ -379,48 +379,7 @@ export const getFullWatchData = async (): Promise<{
   }
 };
 
-/**
- * Инициализация данных в Firestore из локального файла
- */
-export const initializeWatchData = async (): Promise<void> => {
-  try {
-    const batch = writeBatch(db);
-    
-    // Добавляем корпуса часов
-    for (const watchCase of watchData.cases) {
-      const docRef = doc(collection(db, 'watchCases'));
-      batch.set(docRef, {
-        ...watchCase,
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now()
-      });
-    }
-    
-    // Добавляем детали часов
-    const parts = [
-      ...watchData.dials.map(part => ({ ...part, partType: 'dial' as const })),
-      ...watchData.hands.map(part => ({ ...part, partType: 'hand' as const })),
-      ...watchData.rotors.map(part => ({ ...part, partType: 'rotor' as const })),
-      ...watchData.straps.map(part => ({ ...part, partType: 'strap' as const })),
-      ...watchData.bezels.map(part => ({ ...part, partType: 'bezel' as const }))
-    ];
-    
-    for (const part of parts) {
-      const docRef = doc(collection(db, 'watchParts'));
-      batch.set(docRef, {
-        ...part,
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now()
-      });
-    }
-    
-    await batch.commit();
-    console.log('Данные успешно инициализированы в Firestore');
-  } catch (error) {
-    console.error('Ошибка при инициализации данных:', error);
-    throw new Error('Не удалось инициализировать данные в Firestore');
-  }
-};
+
 
 /**
  * Оптимизированная функция для одновременного получения корпуса часов и всех совместимых деталей

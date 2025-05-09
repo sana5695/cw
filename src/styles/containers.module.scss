@@ -1,0 +1,44 @@
+.card {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.container {
+  padding: 1rem;
+  height: 100%;
+  width: 100%;
+}
+
+.flexColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.flexRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.roundedTopLeft {
+  border-top-left-radius: 1.5rem;
+}
+
+.fullHeight {
+  height: 100%;
+}
+
+.overflowHidden {
+  overflow: hidden;
+}
+
+.withShadow {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+} 

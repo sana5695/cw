@@ -1,0 +1,61 @@
+.heading1 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-text-primary);
+}
+
+.heading2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-text-primary);
+}
+
+.heading3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-text-primary);
+}
+
+.text {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+}
+
+.textSecondary {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.textSmall {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.textBold {
+  font-weight: 600;
+}
+
+.textCenter {
+  text-align: center;
+}
+
+.textWhite {
+  color: white;
+}
+
+.textPrimary {
+  color: var(--color-text-primary);
+}
+
+.textSecondary {
+  color: var(--color-text-secondary);
+}
+
+.textAccent {
+  color: var(--color-accent);
+} 

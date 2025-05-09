@@ -1,0 +1,67 @@
+.container {
+  padding: 1.5rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 1rem;
+}
+
+.partsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  gap: 1rem;
+}
+
+.partCard {
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: white;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.selected {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+
+.imageContainer {
+  position: relative;
+  height: 8rem;
+  background-color: #f3f4f6;
+}
+
+.partImage {
+  object-fit: contain;
+}
+
+.partInfo {
+  padding: 0.75rem;
+}
+
+.partName {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.partPrice {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.noPartsMessage {
+  text-align: center;
+  padding: 2rem 0;
+  color: var(--color-text-secondary);
+} 
