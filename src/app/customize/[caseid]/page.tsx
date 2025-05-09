@@ -35,8 +35,15 @@ export default async function CustomizePage({
 }: { 
   params: { caseid: string }
 }) {
+  // Дожидаемся параметров маршрута
+  const resolvedParams = await Promise.resolve(params);
+  
+  if (!resolvedParams?.caseid) {
+    notFound();
+  }
+  
   // Декодируем и находим выбранный корпус
-  const decodedCaseId = decodeURIComponent(params.caseid);
+  const decodedCaseId = decodeURIComponent(resolvedParams.caseid);
   
   try {
     // Получаем корпус из Firebase по имени
