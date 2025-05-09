@@ -3,7 +3,9 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FirebaseWatchCase, getAllWatchCases } from '@/services/watchDataService';
+import { prefetchCaseData } from '@/utils/prefetchHelper';
 
 interface CaseSelectorProps {
   onSelectCase?: (caseId: string, caseName: string) => void;
@@ -14,6 +16,7 @@ export function CaseSelector({
   onSelectCase,
   linkMode = false 
 }: CaseSelectorProps) {
+  const router = useRouter();
   const [cases, setCases] = useState<FirebaseWatchCase[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,6 +37,19 @@ export function CaseSelector({
 
     loadCases();
   }, []);
+  
+  // Функция для прямого перехода к конструктору
+  const handleCaseClick = (watchCase: FirebaseWatchCase) => {
+    if (!linkMode) {
+      onSelectCase && onSelectCase(watchCase.id!, watchCase.name);
+      return;
+    }
+    
+    // Начинаем предзагрузку данных и сразу перенаправляем пользователя
+    const targetUrl = `/customize/${encodeURIComponent(watchCase.name)}`;
+    prefetchCaseData(watchCase.name);
+    router.push(targetUrl);
+  };
 
   if (loading) {
     return (
@@ -67,63 +83,35 @@ export function CaseSelector({
     <div className="overflow-y-auto h-full custom-scrollbar">
       <div className="grid p-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {cases.map((watchCase) => (
-          linkMode ? (
-            <Link
-              key={watchCase.id}
-              href={`/customize/${encodeURIComponent(watchCase.name)}`}
-              className="rounded-xl bg-gradient-to-b from-white to-gray-50 shadow-md transition-transform hover:scale-105 overflow-hidden flex flex-col"
-            >
-              <div className="relative h-48 w-full">
-                <Image
-                  src={watchCase.image}
-                  alt={watchCase.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-contain"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="font-semibold text-black text-lg">{watchCase.name}</h3>
-                {watchCase.price && (
-                  <p className="text-[var(--color-accent)] font-medium mt-1">
-                    {new Intl.NumberFormat('ru-RU', {
-                      style: 'currency',
-                      currency: 'RUB',
-                      maximumFractionDigits: 0
-                    }).format(watchCase.price)}
-                  </p>
-                )}
-              </div>
-            </Link>
-          ) : (
-            <button
-              key={watchCase.id}
-              onClick={() => onSelectCase && onSelectCase(watchCase.id!, watchCase.name)}
-              className="rounded-xl bg-gradient-to-b from-white to-gray-50 shadow-md transition-transform hover:scale-105 overflow-hidden flex flex-col"
-            >
-              <div className="relative h-48 w-full">
-                <Image
-                  src={watchCase.image}
-                  alt={watchCase.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="font-semibold text-lg">{watchCase.name}</h3>
-                {watchCase.price && (
-                  <p className="text-[var(--color-accent)] font-medium mt-1">
-                    {new Intl.NumberFormat('ru-RU', {
-                      style: 'currency',
-                      currency: 'RUB',
-                      maximumFractionDigits: 0
-                    }).format(watchCase.price)}
-                  </p>
-                )}
-              </div>
-            </button>
-          )
+          <div
+            key={watchCase.id}
+            onClick={() => handleCaseClick(watchCase)}
+            className="rounded-xl bg-gradient-to-b from-white to-gray-50 shadow-md transition-transform hover:scale-105 overflow-hidden flex flex-col cursor-pointer"
+            onMouseEnter={() => prefetchCaseData(watchCase.name)}
+          >
+            <div className="relative h-48 w-full">
+              <Image
+                src={watchCase.image}
+                alt={watchCase.name}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-contain"
+                priority={cases.indexOf(watchCase) < 4} // Приоритет для первых 4 изображений
+              />
+            </div>
+            <div className="p-4">
+              <h3 className="font-semibold text-black text-lg">{watchCase.name}</h3>
+              {watchCase.price && (
+                <p className="text-[var(--color-accent)] font-medium mt-1">
+                  {new Intl.NumberFormat('ru-RU', {
+                    style: 'currency',
+                    currency: 'RUB',
+                    maximumFractionDigits: 0
+                  }).format(watchCase.price)}
+                </p>
+              )}
+            </div>
+          </div>
         ))}
       </div>
     </div>
