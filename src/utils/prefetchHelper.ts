@@ -1,7 +1,8 @@
 import { getWatchCaseWithCompatibleParts } from '@/services/watchDataService';
 
-// Кэш для предзагруженных данных
+// Кэш для предзагруженных данных и результатов
 const prefetchCache = new Set<string>();
+const dataCache = new Map<string, any>();
 
 /**
  * Предзагружает данные для конкретного корпуса часов
@@ -17,13 +18,27 @@ export const prefetchCaseData = async (caseName: string): Promise<void> => {
   prefetchCache.add(caseName);
   
   try {
-    // Запускаем предзагрузку в фоновом режиме
-    getWatchCaseWithCompatibleParts(caseName).catch(() => {
-      // Если произошла ошибка, удаляем из кэша, чтобы попытаться загрузить снова при следующей попытке
-      prefetchCache.delete(caseName);
-    });
+    // Низкий приоритет для предзагрузки, чтобы не блокировать основной поток
+    setTimeout(() => {
+      getWatchCaseWithCompatibleParts(caseName)
+        .then((data) => {
+          // Сохраняем результат в кэше для потенциального использования
+          dataCache.set(caseName, data);
+        })
+        .catch(() => {
+          prefetchCache.delete(caseName);
+        });
+    }, 0);
   } catch (error) {
-    // В случае ошибки удаляем из кэша
     prefetchCache.delete(caseName);
   }
+};
+
+/**
+ * Получает предварительно загруженные данные для корпуса
+ * @param caseName Название корпуса
+ * @returns Предварительно загруженные данные или null, если их нет
+ */
+export const getPrefetchedData = (caseName: string): any => {
+  return dataCache.get(caseName) || null;
 }; 

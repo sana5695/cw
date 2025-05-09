@@ -6,6 +6,7 @@ import {
   FirebaseWatchCase, 
   FirebaseWatchPart 
 } from '@/services/watchDataService';
+import { getPrefetchedData } from '@/utils/prefetchHelper';
 
 // Функция для преобразования Firestore Timestamp в ISO строку
 const convertTimestamp = (timestamp: any) => {
@@ -61,7 +62,8 @@ function LoadingSkeleton() {
 
 // Включаем динамическое кэширование для повышения производительности
 export const dynamic = 'force-dynamic'; 
-export const fetchCache = 'default-cache';
+export const fetchCache = 'default-no-store';
+export const revalidate = 0; // Отключаем кеширование страницы
 
 // Серверный компонент страницы
 export default async function CustomizePage({ 
@@ -80,8 +82,20 @@ export default async function CustomizePage({
   const decodedCaseId = decodeURIComponent(resolvedParams.caseid);
   
   try {
-    // Получаем корпус и все совместимые детали за один запрос
-    const { watchCase, compatibleParts } = await getWatchCaseWithCompatibleParts(decodedCaseId);
+    // Проверяем, есть ли предзагруженные данные
+    let watchCase, compatibleParts;
+    const prefetchedData = getPrefetchedData(decodedCaseId);
+    
+    if (prefetchedData) {
+      // Используем предзагруженные данные
+      watchCase = prefetchedData.watchCase;
+      compatibleParts = prefetchedData.compatibleParts;
+    } else {
+      // Получаем корпус и все совместимые детали за один запрос
+      const result = await getWatchCaseWithCompatibleParts(decodedCaseId);
+      watchCase = result.watchCase;
+      compatibleParts = result.compatibleParts;
+    }
     
     // Если корпус не найден, показываем 404
     if (!watchCase) {

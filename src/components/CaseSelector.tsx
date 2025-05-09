@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -20,6 +20,7 @@ export function CaseSelector({
   const [cases, setCases] = useState<FirebaseWatchCase[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const loadCases = async () => {
@@ -27,6 +28,14 @@ export function CaseSelector({
         setLoading(true);
         const casesData = await getAllWatchCases();
         setCases(casesData);
+        
+        // Предзагружаем данные для первых 2 корпусов автоматически
+        if (casesData.length > 0) {
+          prefetchCaseData(casesData[0].name);
+          if (casesData.length > 1) {
+            prefetchCaseData(casesData[1].name);
+          }
+        }
       } catch (err) {
         console.error('Ошибка при загрузке корпусов часов:', err);
         setError('Не удалось загрузить корпуса часов');
@@ -38,18 +47,37 @@ export function CaseSelector({
     loadCases();
   }, []);
   
-  // Функция для прямого перехода к конструктору
-  const handleCaseClick = (watchCase: FirebaseWatchCase) => {
+  // Мемоизированная функция для прямого перехода к конструктору
+  const handleCaseClick = useCallback((watchCase: FirebaseWatchCase, index: number) => {
     if (!linkMode) {
       onSelectCase && onSelectCase(watchCase.id!, watchCase.name);
       return;
     }
     
+    // Сохраняем активный индекс для визуального отклика
+    setActiveIndex(index);
+    
     // Начинаем предзагрузку данных и сразу перенаправляем пользователя
     const targetUrl = `/customize/${encodeURIComponent(watchCase.name)}`;
     prefetchCaseData(watchCase.name);
-    router.push(targetUrl);
-  };
+    
+    // Используем setTimeout(0) для обеспечения визуального отклика перед навигацией
+    setTimeout(() => {
+      router.push(targetUrl);
+    }, 0);
+  }, [linkMode, onSelectCase, router]);
+
+  // Оптимизированная функция для предварительной загрузки при наведении
+  const handleMouseEnter = useCallback((watchCase: FirebaseWatchCase) => {
+    // Используем requestIdleCallback для загрузки в фоновом режиме
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(() => {
+        prefetchCaseData(watchCase.name);
+      });
+    } else {
+      prefetchCaseData(watchCase.name);
+    }
+  }, []);
 
   if (loading) {
     return (
@@ -82,12 +110,13 @@ export function CaseSelector({
   return (
     <div className="overflow-y-auto h-full custom-scrollbar">
       <div className="grid p-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {cases.map((watchCase) => (
+        {cases.map((watchCase, index) => (
           <div
             key={watchCase.id}
-            onClick={() => handleCaseClick(watchCase)}
-            className="rounded-xl bg-gradient-to-b from-white to-gray-50 shadow-md transition-transform hover:scale-105 overflow-hidden flex flex-col cursor-pointer"
-            onMouseEnter={() => prefetchCaseData(watchCase.name)}
+            onClick={() => handleCaseClick(watchCase, index)}
+            className={`rounded-xl bg-gradient-to-b from-white to-gray-50 shadow-md transition-all hover:scale-105 overflow-hidden flex flex-col cursor-pointer
+              ${activeIndex === index ? 'scale-95 opacity-70' : ''}`}
+            onMouseEnter={() => handleMouseEnter(watchCase)}
           >
             <div className="relative h-48 w-full">
               <Image
@@ -96,7 +125,7 @@ export function CaseSelector({
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-contain"
-                priority={cases.indexOf(watchCase) < 4} // Приоритет для первых 4 изображений
+                priority={index < 4} // Приоритет для первых 4 изображений
               />
             </div>
             <div className="p-4">
