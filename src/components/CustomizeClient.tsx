@@ -1,16 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo, useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { WatchPreview } from './WatchPreview';
-import { ColorSelector } from './ColorSelector';
-import { PartSelector } from './PartSelector';
-import { StepNavigation } from './StepNavigation';
-import { CustomizeStepper } from './CustomizeStepper';
 import { FirebaseWatchCase, FirebaseWatchPart } from '@/services/watchDataService';
+import { CustomizeStepper } from './CustomizeStepper';
+
+// Динамический импорт компонентов для ленивой загрузки
+const WatchPreviewLazy = dynamic(() => import('./WatchPreview').then(mod => ({ default: mod.WatchPreview })), { 
+  ssr: false,
+  loading: () => <div className="w-full h-full flex items-center justify-center">Загрузка предпросмотра...</div>
+});
+
+const StepNavigationLazy = dynamic(() => import('./StepNavigation').then(mod => ({ default: mod.StepNavigation })), {
+  loading: () => <div className="p-4">Загрузка навигации...</div>
+});
 
 // Основной клиентский компонент
-export default function CustomizeClient({ 
+const CustomizeClient = ({
   selectedCase,
   compatibleDials,
   compatibleHands,
@@ -24,7 +31,7 @@ export default function CustomizeClient({
   compatibleRotors: FirebaseWatchPart[];
   compatibleStraps: FirebaseWatchPart[];
   compatibleBezels: FirebaseWatchPart[];
-}) {
+}) => {
   // Состояние для выбранного цвета
   const [selectedColor, setSelectedColor] = useState<string>(
     selectedCase.colors.length > 0 ? selectedCase.colors[0].name : ''
@@ -65,7 +72,7 @@ export default function CustomizeClient({
     }
   }, [compatibleDials, compatibleHands, compatibleRotors, compatibleStraps, compatibleBezels]);
 
-  // Функции установки выбранных деталей
+  // Функции-обработчики (без useMemo, так как они вызывают проблемы с повторным рендерингом)
   const handleSetDial = (partId: string, partName: string) => {
     setSelectedDialId(partId);
     setSelectedDial(partName);
@@ -92,14 +99,33 @@ export default function CustomizeClient({
   };
 
   // Получаем текущие выбранные компоненты для предпросмотра
-  const currentDial = compatibleDials.find(d => d.name === selectedDial);
-  const currentHands = compatibleHands.find(h => h.name === selectedHands);
-  const currentRotor = compatibleRotors.find(r => r.name === selectedRotor);
-  const currentStrap = compatibleStraps.find(s => s.name === selectedStrap);
-  const currentBezel = compatibleBezels.find(b => b.name === selectedBezel);
+  const currentDial = useMemo(() => 
+    compatibleDials.find(d => d.name === selectedDial),
+    [compatibleDials, selectedDial]
+  );
+  
+  const currentHands = useMemo(() => 
+    compatibleHands.find(h => h.name === selectedHands),
+    [compatibleHands, selectedHands]
+  );
+  
+  const currentRotor = useMemo(() => 
+    compatibleRotors.find(r => r.name === selectedRotor),
+    [compatibleRotors, selectedRotor]
+  );
+  
+  const currentStrap = useMemo(() => 
+    compatibleStraps.find(s => s.name === selectedStrap),
+    [compatibleStraps, selectedStrap]
+  );
+  
+  const currentBezel = useMemo(() => 
+    compatibleBezels.find(b => b.name === selectedBezel),
+    [compatibleBezels, selectedBezel]
+  );
 
   // Определяем доступные шаги
-  const steps = [
+  const steps = useMemo(() => [
     { title: "Цвет корпуса", available: selectedCase.colors.length > 0 },
     { title: "Циферблат", available: selectedCase.availableParts.hasDials },
     { title: "Стрелки", available: selectedCase.availableParts.hasHands },
@@ -107,17 +133,17 @@ export default function CustomizeClient({
     { title: "Ремешок", available: selectedCase.availableParts.hasStraps },
     { title: "Безель", available: selectedCase.availableParts.hasBezel },
     { title: "Заказ", available: true }
-  ].filter(step => step.available);
+  ].filter(step => step.available), [selectedCase]);
 
   const handlePrevious = () => {
     if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
+      setCurrentStep(prev => prev - 1);
     }
   };
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
+      setCurrentStep(prev => prev + 1);
     }
   };
 
@@ -140,7 +166,7 @@ export default function CustomizeClient({
         <div className={`md:w-1/2 h-2/5 md:h-full lg:w-1/4 xl:w-1/5 ${
           currentStep === steps.length - 1 ? 'md:block hidden' : ''
         }`}>
-          <WatchPreview
+          <WatchPreviewLazy
             selectedCase={selectedCase}
             selectedColor={selectedColor}
             currentDial={currentDial}
@@ -190,7 +216,7 @@ export default function CustomizeClient({
           />
           
           <div className="bg-white/50">
-            <StepNavigation
+            <StepNavigationLazy
               currentStep={currentStep}
               totalSteps={steps.length}
               onPrevious={handlePrevious}
@@ -202,4 +228,6 @@ export default function CustomizeClient({
       </div>
     </div>
   );
-} 
+};
+
+export default memo(CustomizeClient); 

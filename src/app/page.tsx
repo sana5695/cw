@@ -13,7 +13,14 @@ export default function HomePage() {
         <div className="flex flex-col items-center justify-center py-10 mb-10">
                     <div className="flex flex-row md:flex-row items-center justify-center gap-0 md:gap-2">
                         <div className="relative w-28 h-40 md:w-50 md:h-70">
-                            <Image className=" rotate-12"  src="/images/cases/c1.png" alt="Logo" fill sizes="100vh , 100vw" />
+                            <Image 
+                                className="rotate-12" 
+                                src="/images/cases/c1.png" 
+                                alt="Logo" 
+                                fill 
+                                sizes="(max-width: 768px) 112px, 200px" 
+                                priority 
+                            />
                         </div>
                         <div className="flex flex-col items-start md:items-start">
                             <h2 className="text-4xl md:text-7xl font-bold text-[var(--color-text-primary)]">NOCOPY</h2>

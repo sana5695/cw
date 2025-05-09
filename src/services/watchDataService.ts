@@ -420,4 +420,96 @@ export const initializeWatchData = async (): Promise<void> => {
     console.error('Ошибка при инициализации данных:', error);
     throw new Error('Не удалось инициализировать данные в Firestore');
   }
+};
+
+/**
+ * Оптимизированная функция для одновременного получения корпуса часов и всех совместимых деталей
+ */
+export const getWatchCaseWithCompatibleParts = async (caseName: string): Promise<{
+  watchCase: FirebaseWatchCase | null;
+  compatibleParts: {
+    dials: FirebaseWatchPart[];
+    hands: FirebaseWatchPart[];
+    rotors: FirebaseWatchPart[];
+    straps: FirebaseWatchPart[];
+    bezels: FirebaseWatchPart[];
+  };
+}> => {
+  try {
+    // Получаем корпус часов
+    const casesQuery = query(
+      collection(db, 'watchCases'),
+      where('name', '==', caseName)
+    );
+    
+    const querySnapshot = await getDocs(casesQuery);
+    
+    if (querySnapshot.empty) {
+      return {
+        watchCase: null,
+        compatibleParts: {
+          dials: [],
+          hands: [],
+          rotors: [],
+          straps: [],
+          bezels: []
+        }
+      };
+    }
+    
+    const docSnap = querySnapshot.docs[0];
+    const watchCase = {
+      id: docSnap.id,
+      ...docSnap.data()
+    } as FirebaseWatchCase;
+    
+    // Определяем, какие типы деталей нужно получить
+    const partTypesToFetch = [];
+    if (watchCase.availableParts.hasDials) partTypesToFetch.push('dial');
+    if (watchCase.availableParts.hasHands) partTypesToFetch.push('hand');
+    if (watchCase.availableParts.hasRotors) partTypesToFetch.push('rotor');
+    if (watchCase.availableParts.hasStraps) partTypesToFetch.push('strap');
+    if (watchCase.availableParts.hasBezel) partTypesToFetch.push('bezel');
+    
+    // Параллельно получаем все совместимые детали
+    const fetchPromises = partTypesToFetch.map(partType => 
+      getCompatibleWatchParts(caseName, partType as FirebaseWatchPart['partType'])
+    );
+    
+    const results = await Promise.all(fetchPromises);
+    
+    // Собираем результаты
+    const compatibleParts = {
+      dials: [] as FirebaseWatchPart[],
+      hands: [] as FirebaseWatchPart[],
+      rotors: [] as FirebaseWatchPart[],
+      straps: [] as FirebaseWatchPart[],
+      bezels: [] as FirebaseWatchPart[]
+    };
+    
+    partTypesToFetch.forEach((partType, index) => {
+      switch(partType) {
+        case 'dial':
+          compatibleParts.dials = results[index];
+          break;
+        case 'hand':
+          compatibleParts.hands = results[index];
+          break;
+        case 'rotor':
+          compatibleParts.rotors = results[index];
+          break;
+        case 'strap':
+          compatibleParts.straps = results[index];
+          break;
+        case 'bezel':
+          compatibleParts.bezels = results[index];
+          break;
+      }
+    });
+    
+    return { watchCase, compatibleParts };
+  } catch (error) {
+    console.error(`Ошибка при получении данных для кастомизации ${caseName}:`, error);
+    throw new Error('Не удалось получить данные для кастомизации часов.');
+  }
 }; 
