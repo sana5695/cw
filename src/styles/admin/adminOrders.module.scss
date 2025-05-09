@@ -1,0 +1,259 @@
+.container {
+  width: 100%;
+}
+
+.errorMessage {
+  background-color: rgb(254, 226, 226);
+  border: 1px solid rgb(248, 113, 113);
+  color: rgb(153, 27, 27);
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  margin: 3rem 0;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  border-top: 2px solid rgb(75, 85, 99);
+  border-bottom: 2px solid rgb(75, 85, 99);
+  border-radius: 50%;
+  height: 3rem;
+  width: 3rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.emptyMessage {
+  background-color: var(--color-bg-secondary);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.tableContainer {
+  overflow-x: auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.table {
+  min-width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.tableHeader {
+  background-color: rgb(249, 250, 251);
+}
+
+.tableHeaderCell {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: rgb(107, 114, 128);
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 768px) {
+  .tableHeaderCell {
+    padding: 0.5rem;
+  }
+}
+
+.tableBody {
+  background-color: white;
+}
+
+.tableRow {
+  border-bottom: 1px solid rgb(229, 231, 235);
+}
+
+.tableRow:hover {
+  background-color: rgb(249, 250, 251);
+}
+
+.tableCell {
+  padding: 1rem;
+  font-size: 0.875rem;
+  color: rgb(55, 65, 81);
+}
+
+@media (max-width: 768px) {
+  .tableCell {
+    padding: 0.5rem;
+  }
+}
+
+.idCell {
+  font-weight: 500;
+  color: rgb(17, 24, 39);
+}
+
+.statusSelect {
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  appearance: none;
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1em 1em;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  padding-right: 2rem;
+}
+
+.actionsCell {
+  position: relative;
+}
+
+.actionsContainer {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.detailsLink {
+  color: rgb(79, 70, 229);
+  text-decoration: none;
+}
+
+.detailsLink:hover {
+  color: rgb(67, 56, 202);
+}
+
+.deleteButton {
+  color: rgb(220, 38, 38);
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  color: rgb(185, 28, 28);
+}
+
+.confirmDialog {
+  position: absolute;
+  z-index: 10;
+  margin-top: 0.5rem;
+  background-color: white;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgb(229, 231, 235);
+}
+
+.confirmText {
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.confirmButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.confirmDeleteButton {
+  background-color: rgb(220, 38, 38);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+}
+
+.confirmDeleteButton:hover {
+  background-color: rgb(185, 28, 28);
+}
+
+.cancelDeleteButton {
+  background-color: rgb(229, 231, 235);
+  color: rgb(17, 24, 39);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+}
+
+.cancelDeleteButton:hover {
+  background-color: rgb(209, 213, 219);
+}
+
+/* Мобильный вид */
+@media (max-width: 640px) {
+  .tableContainer {
+    border-radius: 0;
+    box-shadow: none;
+  }
+  
+  .table {
+    display: block;
+  }
+  
+  .tableHeader {
+    display: none; /* Скрываем заголовки таблицы */
+  }
+  
+  .tableBody {
+    display: block;
+  }
+  
+  .tableRow {
+    display: block;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgb(229, 231, 235);
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .tableCell {
+    display: flex;
+    padding: 0.5rem 0;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgb(243, 244, 246);
+  }
+  
+  .tableCell:last-child {
+    border-bottom: none;
+  }
+  
+  .tableCell::before {
+    content: attr(data-label);
+    font-weight: 500;
+    color: rgb(107, 114, 128);
+  }
+  
+  .actionsContainer {
+    justify-content: flex-end;
+  }
+  
+  .confirmDialog {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-top: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    z-index: 50;
+  }
+} 

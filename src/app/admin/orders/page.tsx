@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { getOrders, FirebaseOrder, updateOrderStatus, deleteOrder } from '@/services/orderService';
 import { adminLogout } from '@/services/authService';
 import AdminLayout from '@/components/admin/AdminLayout';
+import styles from '@/styles/admin/adminOrders.module.scss';
 
 const statusColors = {
   'new': 'bg-blue-100 text-blue-800',
@@ -87,115 +88,117 @@ export default function AdminOrders() {
 
   return (
     <AdminLayout pageTitle="Панель управления заказами">
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
-      )}
+      <div className={styles.container}>
+        {error && (
+          <div className={styles.errorMessage}>
+            {error}
+          </div>
+        )}
 
-      {loading ? (
-        <div className="flex justify-center my-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-        </div>
-      ) : orders.length === 0 ? (
-        <div className="bg-[var(--color-bg-secondary)] p-6 rounded-lg shadow-md">
-          <p className="text-[var(--color-text-secondary)] text-center">Нет заказов</p>
-        </div>
-      ) : (
-        <div className="overflow-auto rounded-lg shadow-md">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Телефон
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Модель часов
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Дата заказа
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Статус
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Действия
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {orders.map((order) => (
-                <tr key={order.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {order.id?.substring(0, 8)}...
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {order.phone}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {order.selectedComponents.caseName} ({order.selectedComponents.color})
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {order.createdAt instanceof Date 
-                      ? order.createdAt.toLocaleDateString()
-                      : order.createdAt?.toDate?.()?.toLocaleDateString() || 'Н/Д'}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <select
-                      value={order.status}
-                      onChange={(e) => handleStatusChange(order.id!, e.target.value as FirebaseOrder['status'])}
-                      className={`text-sm font-medium px-2.5 py-0.5 rounded-full ${statusColors[order.status] || ''}`}
-                    >
-                      {Object.entries(statusTranslations).map(([value, label]) => (
-                        <option key={value} value={value}>{label}</option>
-                      ))}
-                    </select>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-2">
-                      <Link 
-                        href={`/admin/orders/${order.id}`}
-                        className="text-indigo-600 hover:text-indigo-900"
-                      >
-                        Подробнее
-                      </Link>
-                      <button
-                        onClick={() => handleDeleteConfirm(order.id!)}
-                        className="text-red-600 hover:text-red-900"
-                      >
-                        Удалить
-                      </button>
-                    </div>
-                    
-                    {confirmDelete === order.id && (
-                      <div className="absolute z-10 mt-2 bg-white p-3 rounded-md shadow-lg border border-gray-200">
-                        <p className="text-sm mb-2">Вы уверены?</p>
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={() => handleDeleteOrder(order.id!)}
-                            className="bg-red-500 text-white px-2 py-1 text-xs rounded"
-                          >
-                            Да
-                          </button>
-                          <button
-                            onClick={handleDeleteCancel}
-                            className="bg-gray-200 text-gray-800 px-2 py-1 text-xs rounded"
-                          >
-                            Нет
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </td>
+        {loading ? (
+          <div className={styles.loadingContainer}>
+            <div className={styles.spinner}></div>
+          </div>
+        ) : orders.length === 0 ? (
+          <div className={styles.emptyMessage}>
+            Нет заказов
+          </div>
+        ) : (
+          <div className={styles.tableContainer}>
+            <table className={styles.table}>
+              <thead className={styles.tableHeader}>
+                <tr>
+                  <th className={styles.tableHeaderCell}>
+                    ID
+                  </th>
+                  <th className={styles.tableHeaderCell}>
+                    Телефон
+                  </th>
+                  <th className={styles.tableHeaderCell}>
+                    Модель часов
+                  </th>
+                  <th className={styles.tableHeaderCell}>
+                    Дата заказа
+                  </th>
+                  <th className={styles.tableHeaderCell}>
+                    Статус
+                  </th>
+                  <th className={styles.tableHeaderCell}>
+                    Действия
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              </thead>
+              <tbody className={styles.tableBody}>
+                {orders.map((order) => (
+                  <tr key={order.id} className={styles.tableRow}>
+                    <td className={`${styles.tableCell} ${styles.idCell}`} data-label="ID">
+                      {order.id?.substring(0, 8)}...
+                    </td>
+                    <td className={styles.tableCell} data-label="Телефон">
+                      {order.phone}
+                    </td>
+                    <td className={styles.tableCell} data-label="Модель часов">
+                      {order.selectedComponents.caseName} ({order.selectedComponents.color})
+                    </td>
+                    <td className={styles.tableCell} data-label="Дата заказа">
+                      {order.createdAt instanceof Date 
+                        ? order.createdAt.toLocaleDateString()
+                        : order.createdAt?.toDate?.()?.toLocaleDateString() || 'Н/Д'}
+                    </td>
+                    <td className={styles.tableCell} data-label="Статус">
+                      <select
+                        value={order.status}
+                        onChange={(e) => handleStatusChange(order.id!, e.target.value as FirebaseOrder['status'])}
+                        className={`${styles.statusSelect} ${statusColors[order.status] || ''}`}
+                      >
+                        {Object.entries(statusTranslations).map(([value, label]) => (
+                          <option key={value} value={value}>{label}</option>
+                        ))}
+                      </select>
+                    </td>
+                    <td className={`${styles.tableCell} ${styles.actionsCell}`} data-label="Действия">
+                      <div className={styles.actionsContainer}>
+                        <Link 
+                          href={`/admin/orders/${order.id}`}
+                          className={styles.detailsLink}
+                        >
+                          Подробнее
+                        </Link>
+                        <button
+                          onClick={() => handleDeleteConfirm(order.id!)}
+                          className={styles.deleteButton}
+                        >
+                          Удалить
+                        </button>
+                      </div>
+                      
+                      {confirmDelete === order.id && (
+                        <div className={styles.confirmDialog}>
+                          <p className={styles.confirmText}>Вы уверены?</p>
+                          <div className={styles.confirmButtons}>
+                            <button
+                              onClick={() => handleDeleteOrder(order.id!)}
+                              className={styles.confirmDeleteButton}
+                            >
+                              Да
+                            </button>
+                            <button
+                              onClick={handleDeleteCancel}
+                              className={styles.cancelDeleteButton}
+                            >
+                              Нет
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </AdminLayout>
   );
 } 

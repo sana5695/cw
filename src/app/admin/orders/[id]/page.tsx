@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { 
   getOrderById, 
@@ -11,6 +11,8 @@ import {
   addOrderNote
 } from '@/services/orderService';
 import AdminLayout from '@/components/admin/AdminLayout';
+import styles from '@/styles/admin/orderDetails.module.scss';
+import React from 'react';
 
 type StatusType = 'new' | 'processing' | 'completed' | 'cancelled';
 
@@ -28,7 +30,10 @@ const statusTranslations: Record<StatusType, string> = {
   'cancelled': 'Отменен'
 };
 
-export default function OrderDetails({ params }: { params: { id: string } }) {
+export default function OrderDetails() {
+  const params = useParams();
+  const orderId = params.id as string;
+  
   const [order, setOrder] = useState<FirebaseOrder | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -43,7 +48,7 @@ export default function OrderDetails({ params }: { params: { id: string } }) {
   const loadOrder = async () => {
     try {
       setLoading(true);
-      const orderData = await getOrderById(params.id);
+      const orderData = await getOrderById(orderId);
       
       if (orderData) {
         setOrder(orderData);
@@ -100,8 +105,8 @@ export default function OrderDetails({ params }: { params: { id: string } }) {
   if (loading) {
     return (
       <AdminLayout pageTitle="Загрузка заказа...">
-        <div className="flex justify-center items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+        <div className={styles.loadingContainer}>
+          <div className={styles.spinner}></div>
         </div>
       </AdminLayout>
     );
@@ -110,12 +115,12 @@ export default function OrderDetails({ params }: { params: { id: string } }) {
   if (error) {
     return (
       <AdminLayout pageTitle="Ошибка">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div className={styles.errorContainer}>
           {error}
         </div>
         <Link 
           href="/admin/orders" 
-          className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300"
+          className={styles.backButton}
         >
           Вернуться к списку заказов
         </Link>
@@ -126,12 +131,12 @@ export default function OrderDetails({ params }: { params: { id: string } }) {
   if (!order) {
     return (
       <AdminLayout pageTitle="Заказ не найден">
-        <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
+        <div className={styles.emptyStateContainer}>
           Заказ не найден
         </div>
         <Link 
           href="/admin/orders" 
-          className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300"
+          className={styles.backButton}
         >
           Вернуться к списку заказов
         </Link>
@@ -141,208 +146,218 @@ export default function OrderDetails({ params }: { params: { id: string } }) {
 
   return (
     <AdminLayout pageTitle={`Заказ #${order.id?.substring(0, 8)}`}>
-      <div className="flex justify-between items-center mb-6">
-        <Link 
-          href="/admin/orders" 
-          className="bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition duration-300"
-        >
-          Назад к списку
-        </Link>
-      </div>
+      <div className={styles.container}>
+        <div className={styles.backButtonContainer}>
+          <Link 
+            href="/admin/orders" 
+            className={styles.backButton}
+          >
+            Назад к списку
+          </Link>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {/* Основная информация */}
-        <div className="bg-[var(--color-bg-secondary)] p-6 rounded-lg shadow-md col-span-2">
-          <h2 className="text-xl font-semibold mb-4 text-[var(--color-text-primary)]">
-            Информация о заказе
-          </h2>
-          
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm text-gray-500">Дата создания:</p>
-              <p className="font-medium">
-                {order.createdAt instanceof Date 
-                  ? order.createdAt.toLocaleString()
-                  : order.createdAt?.toDate?.()?.toLocaleString() || 'Н/Д'}
-              </p>
-            </div>
+        <div className={styles.gridContainer}>
+          {/* Основная информация */}
+          <div className={styles.orderInfoCard}>
+            <h2 className={styles.cardTitle}>
+              Информация о заказе
+            </h2>
             
-            <div>
-              <p className="text-sm text-gray-500">Статус:</p>
-              <div>
-                <select
-                  value={order.status}
-                  onChange={(e) => handleStatusChange(e.target.value as FirebaseOrder['status'])}
-                  className={`text-sm font-medium px-2.5 py-0.5 rounded-full ${statusColors[order.status] || ''}`}
-                >
-                  {Object.entries(statusTranslations).map(([value, label]) => (
-                    <option key={value} value={value}>{label}</option>
-                  ))}
-                </select>
+            <div className={styles.infoGrid}>
+              <div className={styles.infoItem}>
+                <p className={styles.infoLabel}>Дата создания:</p>
+                <p className={styles.infoValue}>
+                  {order.createdAt instanceof Date 
+                    ? order.createdAt.toLocaleString()
+                    : order.createdAt?.toDate?.()?.toLocaleString() || 'Н/Д'}
+                </p>
+              </div>
+              
+              <div className={styles.infoItem}>
+                <p className={styles.infoLabel}>Статус:</p>
+                <div>
+                  <select
+                    value={order.status}
+                    onChange={(e) => handleStatusChange(e.target.value as FirebaseOrder['status'])}
+                    className={`${styles.statusSelect} ${statusColors[order.status] || ''}`}
+                  >
+                    {Object.entries(statusTranslations).map(([value, label]) => (
+                      <option key={value} value={value}>{label}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              
+              <div className={styles.infoItem}>
+                <p className={styles.infoLabel}>Телефон клиента:</p>
+                <p className={styles.infoValue}>{order.phone}</p>
+              </div>
+              
+              <div className={styles.infoItem}>
+                <p className={styles.infoLabel}>Предпочитаемый способ связи:</p>
+                <p className={styles.infoValue}>{order.contactMethod}</p>
+              </div>
+              
+              <div className={`${styles.infoItem} ${styles.fullWidthItem}`}>
+                <p className={styles.infoLabel}>Комментарий клиента:</p>
+                <div className={styles.commentBox}>
+                  {order.comment || 'Нет комментария'}
+                </div>
+              </div>
+            </div>
+
+            {/* Компоненты часов */}
+            <div className={styles.componentsSection}>
+              <h3 className={styles.componentsTitle}>
+                Выбранные компоненты
+              </h3>
+              
+              <div className={styles.componentsList}>
+                <div className={styles.componentItem}>
+                  <span className={styles.componentName}>
+                    Корпус: {order.selectedComponents.caseName}
+                  </span>
+                </div>
+                
+                <div className={styles.componentItem}>
+                  <span className={styles.componentName}>
+                    Цвет: {order.selectedComponents.color}
+                  </span>
+                </div>
+                
+                {order.selectedComponents.dial && (
+                  <div className={styles.componentItem}>
+                    <span className={styles.componentName}>
+                      Циферблат: {order.selectedComponents.dial}
+                    </span>
+                  </div>
+                )}
+                
+                {order.selectedComponents.hands && (
+                  <div className={styles.componentItem}>
+                    <span className={styles.componentName}>
+                      Стрелки: {order.selectedComponents.hands}
+                    </span>
+                  </div>
+                )}
+                
+                {order.selectedComponents.rotor && (
+                  <div className={styles.componentItem}>
+                    <span className={styles.componentName}>
+                      Ротор: {order.selectedComponents.rotor}
+                    </span>
+                  </div>
+                )}
+                
+                {order.selectedComponents.strap && (
+                  <div className={styles.componentItem}>
+                    <span className={styles.componentName}>
+                      Ремешок: {order.selectedComponents.strap}
+                    </span>
+                  </div>
+                )}
+                
+                {order.selectedComponents.bezel && (
+                  <div className={styles.componentItem}>
+                    <span className={styles.componentName}>
+                      Безель: {order.selectedComponents.bezel}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
             
-            <div>
-              <p className="text-sm text-gray-500">Телефон клиента:</p>
-              <p className="font-medium">{order.phone}</p>
-            </div>
-            
-            <div>
-              <p className="text-sm text-gray-500">Предпочитаемый способ связи:</p>
-              <p className="font-medium">{order.contactMethod}</p>
-            </div>
-            
-            <div className="col-span-2">
-              <p className="text-sm text-gray-500 mb-1">Комментарий клиента:</p>
-              <p className="font-medium text-gray-800 bg-gray-50 p-2 rounded">
-                {order.comment || 'Нет комментария'}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Сводка по заказу */}
-        <div className="bg-[var(--color-bg-secondary)] p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-[var(--color-text-primary)]">
-            Действия
-          </h2>
-          
-          <div className="mb-4">
-            <p className="text-sm text-gray-500 mb-1">Заметки администратора:</p>
-            <textarea
-              value={adminNote}
-              onChange={(e) => setAdminNote(e.target.value)}
-              className="w-full p-2 border rounded-md mb-2"
-              rows={4}
-              placeholder="Добавьте заметки по заказу..."
-            ></textarea>
-            <button
-              onClick={handleSaveNote}
-              className="bg-green-600 text-white py-1 px-4 rounded-md hover:bg-green-700 transition duration-300 text-sm"
-            >
-              Сохранить заметку
-            </button>
-          </div>
-          
-          <div className="border-t pt-4">
-            <h3 className="text-lg font-medium mb-2 text-[var(--color-text-primary)]">
-              Удаление заказа
-            </h3>
-            
-            {!confirmDelete ? (
-              <button
-                onClick={() => setConfirmDelete(true)}
-                className="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition duration-300 text-sm"
-              >
-                Удалить заказ
-              </button>
-            ) : (
-              <div>
-                <p className="text-sm mb-2 text-red-600">Вы уверены? Это действие нельзя отменить.</p>
-                <div className="flex space-x-2">
-                  <button
-                    onClick={handleDelete}
-                    className="bg-red-600 text-white py-1 px-4 rounded-md hover:bg-red-700 transition duration-300 text-sm"
-                  >
-                    Да, удалить
-                  </button>
-                  <button
-                    onClick={() => setConfirmDelete(false)}
-                    className="bg-gray-200 text-gray-800 py-1 px-4 rounded-md hover:bg-gray-300 transition duration-300 text-sm"
-                  >
-                    Отмена
-                  </button>
+            {/* История статусов */}
+            {order.statusHistory && order.statusHistory.length > 0 && (
+              <div className={styles.statusHistory}>
+                <h3 className={styles.statusHistoryTitle}>
+                  История статусов
+                </h3>
+                <div className={styles.statusHistoryList}>
+                  {order.statusHistory.map((statusItem, index) => (
+                    <div key={index} className={styles.statusHistoryItem}>
+                      <div className={styles.statusTimestamp}>
+                        {statusItem.timestamp instanceof Date 
+                          ? statusItem.timestamp.toLocaleString()
+                          : statusItem.timestamp?.toDate?.()?.toLocaleString() || 'Н/Д'}
+                      </div>
+                      <div className={styles.statusText}>
+                        {statusTranslations[statusItem.status as StatusType] || statusItem.status}
+                      </div>
+                      {statusItem.note && (
+                        <div className={styles.statusNote}>
+                          {statusItem.note}
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
           </div>
-        </div>
-      </div>
 
-      {/* Детали заказа */}
-      <div className="bg-[var(--color-bg-secondary)] p-6 rounded-lg shadow-md mb-6">
-        <h2 className="text-xl font-semibold mb-4 text-[var(--color-text-primary)]">
-          Детали заказа
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <p className="text-sm text-gray-500">Модель корпуса:</p>
-            <p className="font-medium">{order.selectedComponents.caseName}</p>
-          </div>
-          
-          <div>
-            <p className="text-sm text-gray-500">Цвет корпуса:</p>
-            <p className="font-medium">{order.selectedComponents.color}</p>
-          </div>
-          
-          <div>
-            <p className="text-sm text-gray-500">Циферблат:</p>
-            <p className="font-medium">{order.selectedComponents.dial || 'Не выбран'}</p>
-          </div>
-          
-          <div>
-            <p className="text-sm text-gray-500">Стрелки:</p>
-            <p className="font-medium">{order.selectedComponents.hands || 'Не выбраны'}</p>
-          </div>
-          
-          <div>
-            <p className="text-sm text-gray-500">Ротор:</p>
-            <p className="font-medium">{order.selectedComponents.rotor || 'Не выбран'}</p>
-          </div>
-          
-          <div>
-            <p className="text-sm text-gray-500">Ремешок:</p>
-            <p className="font-medium">{order.selectedComponents.strap || 'Не выбран'}</p>
-          </div>
-          
-          <div>
-            <p className="text-sm text-gray-500">Безель:</p>
-            <p className="font-medium">{order.selectedComponents.bezel || 'Не выбран'}</p>
-          </div>
-          
-          <div>
-            <p className="text-sm text-gray-500">Общая стоимость:</p>
-            <p className="font-medium">{order.totalPrice ? `${order.totalPrice} ₽` : 'Не указана'}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* История изменений статуса */}
-      {order.statusHistory && order.statusHistory.length > 0 && (
-        <div className="bg-[var(--color-bg-secondary)] p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-[var(--color-text-primary)]">
-            История изменений
-          </h2>
-          
-          <ul className="divide-y divide-gray-200">
-            {order.statusHistory.map((historyItem, index) => (
-              <li key={index} className="py-3">
-                <div className="flex items-start">
-                  <div className={`h-6 w-6 rounded-full ${statusColors[historyItem.status as keyof typeof statusColors] || 'bg-gray-100'} flex items-center justify-center mr-3`}>
-                    <span className="text-xs">{index + 1}</span>
-                  </div>
-                  <div>
-                    <p className="font-medium">
-                      {statusTranslations[historyItem.status as keyof typeof statusTranslations] || historyItem.status}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {historyItem.timestamp instanceof Date 
-                        ? historyItem.timestamp.toLocaleString()
-                        : historyItem.timestamp?.toDate?.()?.toLocaleString() || 'Н/Д'}
-                    </p>
-                    {historyItem.note && (
-                      <p className="text-sm mt-1 bg-gray-50 text-gray-800 p-1 rounded">
-                        {historyItem.note}
-                      </p>
-                    )}
+          {/* Блок действий */}
+          <div className={styles.actionsCard}>
+            <h2 className={styles.cardTitle}>
+              Действия
+            </h2>
+            
+            <div className={styles.notesSection}>
+              <p className={styles.infoLabel}>Заметки администратора:</p>
+              <textarea
+                value={adminNote}
+                onChange={(e) => setAdminNote(e.target.value)}
+                className={styles.textarea}
+                rows={4}
+                placeholder="Добавьте заметки по заказу..."
+              ></textarea>
+              <button
+                onClick={handleSaveNote}
+                className={styles.saveButton}
+              >
+                Сохранить заметку
+              </button>
+            </div>
+            
+            <div className={styles.divider}></div>
+            
+            <div className={styles.deleteSection}>
+              <h3 className={styles.deleteTitle}>
+                Удаление заказа
+              </h3>
+              
+              {!confirmDelete ? (
+                <button
+                  onClick={() => setConfirmDelete(true)}
+                  className={styles.deleteButton}
+                >
+                  Удалить заказ
+                </button>
+              ) : (
+                <div>
+                  <p className={styles.confirmText}>
+                    Вы уверены? Это действие нельзя отменить.
+                  </p>
+                  <div className={styles.confirmButtons}>
+                    <button
+                      onClick={handleDelete}
+                      className={styles.deleteButton}
+                    >
+                      Да, удалить
+                    </button>
+                    <button
+                      onClick={() => setConfirmDelete(false)}
+                      className={styles.cancelDeleteButton}
+                    >
+                      Отмена
+                    </button>
                   </div>
                 </div>
-              </li>
-            ))}
-          </ul>
+              )}
+            </div>
+          </div>
         </div>
-      )}
+      </div>
     </AdminLayout>
   );
 } 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { adminLogin, adminLogout, isAdminAuthenticated } from '@/services/authService';
+import { adminLogin, adminLogout, getCurrentUser } from '@/services/authService';
 
 /**
  * Хук для работы с авторизацией в админ-панели
@@ -23,7 +23,7 @@ export function useAdminAuth() {
     try {
       setLoading(true);
       setError(null);
-      const isAuth = await isAdminAuthenticated();
+      const isAuth = await Boolean(getCurrentUser());
       setIsAuthenticated(isAuth);
     } catch (err) {
       console.error('Ошибка при проверке авторизации', err);
