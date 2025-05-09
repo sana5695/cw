@@ -1,89 +1,89 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
-import { adminLogin } from '@/services/authService';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
+import { Header } from '@/components/ui/Header';
+import { Footer } from '@/components/ui/Footer';
+import { useLoginForm } from '@/hooks/admin/useLoginForm';
+import styles from '@/styles/admin/login.module.scss';
 
-export default function AdminLogin() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-
-    try {
-      await adminLogin(email, password);
-      router.push('/admin/orders');
-    } catch (error: any) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+/**
+ * Страница авторизации администратора
+ */
+export default function AdminLoginPage() {
+  const {
+    email,
+    password,
+    loading,
+    error,
+    isFormValid,
+    handleEmailChange,
+    handlePasswordChange,
+    handleSubmit
+  } = useLoginForm();
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className={styles.container}>
       <Header />
-      <main className="flex-grow py-10 px-6">
-        <div className="max-w-md mx-auto">
-          <h1 className="text-3xl font-bold mb-6 text-center text-[var(--color-text-primary)]">
-            Вход в панель администратора
-          </h1>
-          
-          <div className="bg-[var(--color-bg-secondary)] p-6 rounded-lg shadow-md">
-            {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                {error}
-              </div>
-            )}
-            
-            <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label className="block text-[var(--color-text-primary)] text-sm font-medium mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              
-              <div className="mb-6">
-                <label className="block text-[var(--color-text-primary)] text-sm font-medium mb-2">
-                  Пароль
-                </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300 flex justify-center"
-              >
-                {loading ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
-                ) : (
-                  'Войти'
-                )}
-              </button>
-            </form>
+      <main className={styles.main}>
+        <div className={styles.loginCard}>
+          <div className={styles.logoContainer}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-12 w-12 text-blue-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
+            </svg>
+            <h1 className={styles.title}>Вход в систему</h1>
           </div>
+
+          {error && <div className={styles.errorMessage}>{error}</div>}
+
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.formGroup}>
+              <label htmlFor="email" className={styles.label}>
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
+                className={styles.input}
+                placeholder="Введите ваш email"
+                required
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="password" className={styles.label}>
+                Пароль
+              </label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={handlePasswordChange}
+                className={styles.input}
+                placeholder="Введите ваш пароль"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              className={styles.loginButton}
+              disabled={loading || !isFormValid}
+            >
+              {loading ? 'Вход...' : 'Войти'}
+            </button>
+          </form>
         </div>
       </main>
       <Footer />

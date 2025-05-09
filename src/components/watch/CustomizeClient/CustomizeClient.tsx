@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { FirebaseWatchCase, FirebaseWatchPart } from '@/services/watchDataService';
-import { CustomizeStepper } from '../CustomizeStepper';
+import { CustomizeStepper } from '@/components/watch/CustomizeStepper';
 import { WatchPreview } from '../WatchPreview';
 import { StepNavigation } from '@/components/ui/StepNavigation';
 import { Header } from '@/components/ui/Header';

@@ -209,6 +209,17 @@ export function CustomizeStepper({
       // Добавляем цену и идентификаторы деталей к заказу
       const formDataWithDetails = {
         ...formData,
+        comment: formData.comments,
+        contactMethod: 'phone' as 'phone' | 'telegram' | 'whatsapp' | 'viber', // указываем конкретный тип
+        selectedComponents: {
+          caseName: selectedCase.name,
+          color: selectedColor,
+          dial: selectedDial || '',
+          hands: selectedHands || '',
+          rotor: selectedRotor || '',
+          strap: selectedStrap || '',
+          bezel: selectedBezel || ''
+        },
         totalPrice: calculateTotal(),
         caseId: selectedCase.id,
         dialId: selectedDialId,

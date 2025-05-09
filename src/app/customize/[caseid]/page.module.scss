@@ -8,8 +8,7 @@
 }
 
 .header {
-  background-color: var(--color-bg-secondary);
-  background-opacity: 0.8;
+  background-color: rgba(var(--color-bg-secondary-rgb), 0.8);
   padding: 0.75rem 1.5rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }

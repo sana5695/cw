@@ -1,29 +1,36 @@
 'use client';
 
 import { ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
 import { AdminProtectedRoute } from '@/components/AdminProtectedRoute';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
-import AdminNavbar from './AdminNavbar';
+import { Header } from '@/components/ui/Header';
+import { Footer } from '@/components/ui/Footer';
+import AdminNavbar from '@/components/admin/ui/AdminNavbar';
+import styles from '@/styles/admin/adminLayout.module.scss';
 
 interface AdminLayoutProps {
   children: ReactNode;
   pageTitle?: string;
+  hideTitle?: boolean;
 }
 
-const AdminLayout: React.FC<AdminLayoutProps> = ({ 
+/**
+ * Базовый макет для страниц админ-панели
+ */
+export default function AdminLayout({ 
   children, 
-  pageTitle = 'Панель администратора' 
-}) => {
+  pageTitle = 'Панель администратора',
+  hideTitle = false
+}: AdminLayoutProps) {
   return (
     <AdminProtectedRoute>
-      <div className="flex flex-col min-h-screen">
+      <div className={styles.adminContainer}>
         <Header />
         <AdminNavbar />
-        <main className="flex-grow py-8 px-6">
-          <div className="max-w-7xl mx-auto">
-            {pageTitle && (
-              <h1 className="text-2xl font-bold mb-8 text-[var(--color-text-primary)]">
+        <main className={styles.mainContent}>
+          <div className={styles.contentWrapper}>
+            {pageTitle && !hideTitle && (
+              <h1 className={styles.pageTitle}>
                 {pageTitle}
               </h1>
             )}
@@ -34,6 +41,4 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
       </div>
     </AdminProtectedRoute>
   );
-};
-
-export default AdminLayout; 
+} 
